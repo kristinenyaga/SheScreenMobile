@@ -1,4 +1,4 @@
-package com.example.shescreen.ui.theme.Auth
+package com.example.shescreen.ui.screens.Auth
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,10 +30,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.shescreen.ui.navigation.SIGN_IN_SCREEN
 import com.example.shescreen.ui.theme.SheScreenTheme
 
 @Composable
-fun BioDataScreen() {
+fun BioDataScreen(navController: NavHostController) {
     val firstName = remember { mutableStateOf("") }
     val lastName = remember { mutableStateOf("") }
     val phoneNumber = remember { mutableStateOf("") }
@@ -157,7 +161,9 @@ fun BioDataScreen() {
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { /* handle submit */ },
+            onClick = {
+                navController.navigate(SIGN_IN_SCREEN)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
@@ -173,6 +179,6 @@ fun BioDataScreen() {
 @Composable
 private fun BioDataScreenPreview() {
     SheScreenTheme {
-        BioDataScreen()
+        BioDataScreen(navController = rememberNavController())
     }
 }

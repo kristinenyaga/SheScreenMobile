@@ -1,5 +1,7 @@
-package com.example.shescreen.ui.theme.Auth
+package com.example.shescreen.ui.screens.Auth
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -27,20 +28,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.shescreen.R
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.shescreen.ui.navigation.BIO_DATA_SCREEN
+import com.example.shescreen.ui.navigation.HOME_SCREEN
+import com.example.shescreen.ui.navigation.SIGN_IN_SCREEN
 import com.example.shescreen.ui.theme.SheScreenTheme
 
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SignInScreen() {
+fun SignUpScreen(navController: NavHostController) {
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
+    val confirmPassword = remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -65,19 +72,20 @@ fun SignInScreen() {
 
         // Progress Bar
         LinearProgressIndicator(
-            progress = 1f,
+            progress = 0.33f,
             modifier = Modifier
                 .fillMaxWidth(0.6f)
                 .height(8.dp)
                 .clip(RoundedCornerShape(4.dp)),
-            color = Color(0xFF2BAFBF),
-            trackColor = Color.LightGray.copy(alpha = 0.3f)
+            color = Color(0xFF2BAFBF)
+//            color = Color(0xFF2BAFBF),
+//            backgroundColor = Color.LightGray.copy(alpha = 0.3f)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "complete",
+            text = "Step 1/3",
             modifier = Modifier.align(Alignment.End),
             fontSize = 14.sp,
             color = Color.Gray
@@ -86,7 +94,7 @@ fun SignInScreen() {
         Spacer(modifier = Modifier.height(32.dp))
 
         Text(
-            text = "Sign in to your account !",
+            text = "Create your account !",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
@@ -113,26 +121,40 @@ fun SignInScreen() {
             modifier = Modifier.fillMaxWidth()
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Confirm Password
+        OutlinedTextField(
+            value = confirmPassword.value,
+            onValueChange = { confirmPassword.value = it },
+            label = { Text("Confirm Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
+        )
+
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Sign In Button
+        // Sign Up Button
         Button(
-            onClick = { /* handle sign-in */ },
+            onClick = {
+                navController.navigate(BIO_DATA_SCREEN)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
             shape = RoundedCornerShape(25.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2BAFBF))
         ) {
-            Text("Sign In", color = Color.White, fontSize = 16.sp)
+            Text("Sign Up", color = Color.White, fontSize = 16.sp)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("or sign in with")
+        Text("or sign up with")
 
         Spacer(modifier = Modifier.height(12.dp))
 
+        // Google Sign In Button (placeholder)
         Box(
             modifier = Modifier
                 .size(40.dp)
@@ -142,7 +164,7 @@ fun SignInScreen() {
             contentAlignment = Alignment.Center
         ) {
 //            Icon(
-//                painter = painterResource(id = R.drawable.ic_google_logo),
+//                painter = painterResource(id = R.drawable.ic_google_logo), // Add a vector or image asset
 //                contentDescription = "Google",
 //                tint = Color.Unspecified,
 //                modifier = Modifier.size(24.dp)
@@ -153,22 +175,26 @@ fun SignInScreen() {
 
         // Bottom text
         Row {
-            Text("Don't have an account?")
+            Text("Have an account?")
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "sign up",
+                text = "sign in",
                 color = Color(0xFF2BAFBF),
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.clickable { /* navigate to sign-up */ }
+                modifier = Modifier.clickable {
+                    navController.navigate(SIGN_IN_SCREEN)
+                }
             )
         }
     }
 }
 
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
-private fun SignInScreenPreview() {
+private fun SignUpScreenPreview() {
     SheScreenTheme {
-        SignInScreen()
+        SignUpScreen(rememberNavController())
     }
 }

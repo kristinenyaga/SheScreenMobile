@@ -13,7 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.shescreen.ui.theme.Auth.SignUpScreen
+import androidx.navigation.compose.rememberNavController
+import com.example.shescreen.ui.navigation.NavigationGraph
+import com.example.shescreen.ui.screens.Auth.SignUpScreen
 import com.example.shescreen.ui.theme.SheScreenTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +26,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             SheScreenTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                   SignUpScreen()
+                    val navController = rememberNavController()
+                    NavigationGraph(
+                        navController = navController,
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
             }
         }
