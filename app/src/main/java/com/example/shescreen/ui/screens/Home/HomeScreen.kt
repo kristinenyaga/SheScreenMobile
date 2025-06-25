@@ -1,26 +1,42 @@
 package com.example.shescreen.ui.screens.Home
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,15 +44,29 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.shescreen.R
 import com.example.shescreen.ui.theme.SheScreenTheme
-import com.google.accompanist.pager.*
-import kotlinx.coroutines.*
 
+data class CarouselItem(
+    val id: Int,
+    @DrawableRes val imageResId: Int,
+    val contentDescription: String
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) {
+    val items = remember {
+        listOf(
+            CarouselItem(0, R.drawable.prop, "cupcake"),
+            CarouselItem(1, R.drawable.prop, "donut"),
+            CarouselItem(2, R.drawable.prop, "eclair"),
+            CarouselItem(3, R.drawable.prop, "froyo"),
+            CarouselItem(4, R.drawable.prop, "gingerbread"),
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8F9FA))
     ) {
         // Header with gradient
         Box(
@@ -52,11 +82,12 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                     )
                 )
         ) {
+            // 🔹 Title & Subtitle (Centered)
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp, vertical = 16.dp),
-                verticalArrangement = Arrangement.Center
+//                    .align(Alignment.Center)
+                    .padding(horizontal = 24.dp, vertical = 32.dp),
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(
                     text = "SheScreen",
@@ -74,183 +105,150 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                     )
                 )
             }
+
+            // 🔹 Icons at top-right
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = "Profile",
+                    tint = Color.White,
+                    modifier = Modifier.height(28.dp),
+                )
+                Icon(
+                    imageVector = Icons.Default.Notifications,
+                    contentDescription = "Notifications",
+                    tint = Color.White,
+                    modifier = Modifier.height(28.dp)
+                )
+            }
         }
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 24.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Carousel / Pager
-            CervicalInfoCarousel()
-
-            // Clickable Options
-            CervicalOption(
-                title = "Cervical Cancer Screening",
-                iconRes = R.drawable.ic_launcher_foreground, // Add your icon resources
-                color = Color(0xFF4CAF50)
-            ) {
-                // navController.navigate("screening")
-            }
-
-            CervicalOption(
-                title = "Cervical Cancer Management",
-                iconRes = R.drawable.ic_launcher_background,
-                color = Color(0xFF2196F3)
-            ) {
-                // navController.navigate("management")
-            }
-
-            CervicalOption(
-                title = "Cervical Cancer Prevention",
-                iconRes = R.drawable.ic_launcher_foreground,
-                color = Color(0xFF9C27B0)
-            ) {
-                // navController.navigate("prevention")
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun CervicalInfoCarousel() {
-    val pagerState = rememberPagerState()
-    val pages = listOf(
-        CarouselItem(
-            text = "Regular screening can detect cervical cancer early when it's most treatable",
-            imageRes = R.drawable.ic_launcher_foreground  // Add your image resources
-        ),
-        CarouselItem(
-            text = "HPV vaccination can prevent most cases of cervical cancer",
-            imageRes = R.drawable.ic_launcher_background
-        ),
-        CarouselItem(
-            text = "Know your risk factors and get screened regularly",
-            imageRes = R.drawable.ic_launcher_foreground
-        )
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-    ) {
-        HorizontalPager(
-            count = pages.size,
-            state = pagerState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-        ) { page ->
-            Box(modifier = Modifier.fillMaxSize()) {
+            Text(
+                "Welcome User 👋", style = TextStyle(
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp
+                )
+            )
+            //            Spacer(modifier.height(20.dp))
+            HorizontalMultiBrowseCarousel(
+                state = rememberCarouselState { items.count() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(top = 16.dp, bottom = 16.dp),
+                preferredItemWidth = 250.dp,
+                itemSpacing = 8.dp,
+//                contentPadding = PaddingValues(horizontal = 10.dp)
+            ) { i ->
+                val item = items[i]
                 Image(
-                    painter = painterResource(id = pages[page].imageRes),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .height(250.dp)
+                        .maskClip(MaterialTheme.shapes.extraLarge),
+                    painter = painterResource(id = item.imageResId),
+                    contentDescription = item.contentDescription,
                     contentScale = ContentScale.Crop
                 )
+            }
+            Text(
+                text = "What would you like to do?",
+                style = TextStyle(
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 18.sp
+                ),
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
 
-                // Gradient overlay for text readability
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            Brush.verticalGradient(
-                                colors = listOf(
-                                    Color.Transparent,
-                                    Color.Black.copy(alpha = 0.7f)
-                                ),
-                                startY = 0.5f
-                            )
-                        )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                CardItem(
+                    title = "Risk Assessment",
+                    description = "Evaluate your health risk through guided questions and early warning signs.",
+                    modifier = Modifier.weight(1f)
                 )
 
-                Text(
-                    text = pages[page].text,
-                    style = TextStyle(
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    ),
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(16.dp)
+                CardItem(
+                    title = "Services",
+                    description = "Locate nearby hospitals, clinics, and support centers with ease.",
+                    modifier = Modifier.weight(1f)
                 )
             }
-        }
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                CardItem(
+                    title = "Education Hub",
+                    description = "Access trusted information about cervical cancer, symptoms, and prevention.",
+                    modifier = Modifier.weight(1f)
+                )
 
-        HorizontalPagerIndicator(
-            pagerState = pagerState,
-            modifier = Modifier
-                .padding(8.dp)
-                .align(Alignment.CenterHorizontally),
-            activeColor = Color(0xFF2BAFBF),
-            inactiveColor = Color.LightGray
-        )
+                CardItem(
+                    title = "Cancer Management",
+                    description = "Monitor symptoms, track progress, and stay in control of your wellness journey.",
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+//            CardItem(
+//                title = "Cervical cancer management",
+//                description = "Articles, guides and more for your wellness.",
+//                modifier = Modifier.fillMaxWidth()
+//            )
+
+        }
     }
 }
 
 @Composable
-fun CervicalOption(
-    title: String,
-    iconRes: Int,
-    color: Color,
-    onClick: () -> Unit
-) {
-    androidx.compose.material3.Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
-        elevation = androidx.compose.material3.CardDefaults.cardElevation(8.dp),
-        shape = RoundedCornerShape(12.dp)
+fun CardItem(title: String, description: String, modifier: Modifier = Modifier) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F8F8)),
+        modifier = modifier
+            .height(140.dp)
+            .clickable { /* Handle click */ }
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(color.copy(alpha = 0.2f))
-                    .padding(12.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = title,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-
             Text(
                 text = title,
                 style = TextStyle(
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.DarkGray
-                ),
-                modifier = Modifier.weight(1f)
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1A7F8F)
+                )
             )
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground), // Add arrow icon
-                contentDescription = "Navigate",
-                modifier = Modifier.size(24.dp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = description,
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    color = Color.DarkGray
+                )
             )
         }
     }
 }
 
-data class CarouselItem(
-    val text: String,
-    val imageRes: Int
-)
 
 @Preview
 @Composable
