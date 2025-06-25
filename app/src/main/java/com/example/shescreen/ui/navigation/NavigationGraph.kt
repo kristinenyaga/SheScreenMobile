@@ -10,12 +10,13 @@ import androidx.navigation.compose.composable
 import com.example.shescreen.ui.screens.Auth.BioDataScreen
 import com.example.shescreen.ui.screens.Auth.SignInScreen
 import com.example.shescreen.ui.screens.Auth.SignUpScreen
+import com.example.shescreen.ui.screens.EducationHub.EducationHubScreen
 import com.example.shescreen.ui.screens.Home.HomeScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationGraph(modifier: Modifier = Modifier, navController: NavHostController) {
-    NavHost(navController = navController, startDestination = HOME_SCREEN) {
+    NavHost(navController = navController, startDestination = SIGN_UP_SCREEN) {
         composable(SIGN_UP_SCREEN) {
             SignUpScreen(navController)
         }
@@ -24,7 +25,8 @@ fun NavigationGraph(modifier: Modifier = Modifier, navController: NavHostControl
         }
         composable(PROFILE_SCREEN) {
         }
-        composable(INSIGHTS_SCREEN) {
+        composable(EDUCATION_HUB_SCREEN) {
+            EducationHubScreen(navController = navController)
         }
         composable(HOME_SCREEN) {
             HomeScreen(navController = navController)

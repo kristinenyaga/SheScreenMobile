@@ -1,6 +1,7 @@
 package com.example.shescreen.ui.screens.Auth
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,14 +29,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.shescreen.data.api.DataViewModel
 import com.example.shescreen.ui.navigation.BIO_DATA_SCREEN
 import com.example.shescreen.ui.navigation.HOME_SCREEN
 import com.example.shescreen.ui.navigation.SIGN_IN_SCREEN
@@ -44,11 +48,11 @@ import com.example.shescreen.ui.theme.SheScreenTheme
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SignUpScreen(navController: NavHostController) {
+fun SignUpScreen(navController: NavHostController, viewModel: DataViewModel = viewModel()) {
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val confirmPassword = remember { mutableStateOf("") }
-
+    var context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -106,7 +110,7 @@ fun SignUpScreen(navController: NavHostController) {
             value = email.value,
             onValueChange = { email.value = it },
             label = { Text("Email") },
-            placeholder = { Text("email") },
+            placeholder = { Text("johndoe@example.com") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -137,7 +141,14 @@ fun SignUpScreen(navController: NavHostController) {
         // Sign Up Button
         Button(
             onClick = {
-                navController.navigate(BIO_DATA_SCREEN)
+                if (password.value.isBlank() || confirmPassword.value.isBlank() || email.value.isBlank()) {
+                    Toast.makeText(context, "Fill in all fields", Toast.LENGTH_LONG).show()
+                } else if (password.value != confirmPassword.value) {
+                    Toast.makeText(context, "Passwords don't match", Toast.LENGTH_LONG).show()
+                } else {
+                    viewModel.signUp(email = email.toString(), password = password.toString())
+                    navController.navigate(BIO_DATA_SCREEN)
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -155,21 +166,21 @@ fun SignUpScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(12.dp))
 
         // Google Sign In Button (placeholder)
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color.LightGray)
-                .clickable { /* Google sign-in */ },
-            contentAlignment = Alignment.Center
-        ) {
+//        Box(
+//            modifier = Modifier
+//                .size(40.dp)
+//                .clip(RoundedCornerShape(8.dp))
+//                .background(Color.LightGray)
+//                .clickable { /* Google sign-in */ },
+//            contentAlignment = Alignment.Center
+//        ) {
 //            Icon(
 //                painter = painterResource(id = R.drawable.ic_google_logo), // Add a vector or image asset
 //                contentDescription = "Google",
 //                tint = Color.Unspecified,
 //                modifier = Modifier.size(24.dp)
 //            )
-        }
+//        }
 
         Spacer(modifier = Modifier.height(24.dp))
 

@@ -56,12 +56,15 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    //navigation
+    //
     implementation (libs.androidx.navigation.compose)
     implementation (libs.accompanist.pager)
     implementation (libs.accompanist.pager.indicators)
-    implementation("androidx.compose.foundation:foundation:1.8.3")
-
+    implementation(libs.androidx.foundation)
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.androidx.runtime.livedata)
+    implementation (libs.androidx.lifecycle.viewmodel.compose)
 
 
 }

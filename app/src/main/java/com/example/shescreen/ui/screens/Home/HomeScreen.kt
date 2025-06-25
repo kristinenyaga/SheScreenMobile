@@ -37,12 +37,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.shescreen.R
+import com.example.shescreen.ui.navigation.EDUCATION_HUB_SCREEN
 import com.example.shescreen.ui.theme.SheScreenTheme
 
 data class CarouselItem(
@@ -136,8 +138,11 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
             Text(
                 "Welcome User 👋", style = TextStyle(
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp
-                )
+                    fontSize = 20.sp,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Center
             )
             //            Spacer(modifier.height(20.dp))
             HorizontalMultiBrowseCarousel(
@@ -176,13 +181,17 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                 CardItem(
                     title = "Risk Assessment",
                     description = "Evaluate your health risk through guided questions and early warning signs.",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    route = "",
+                    navController = navController
                 )
 
                 CardItem(
                     title = "Services",
                     description = "Locate nearby hospitals, clinics, and support centers with ease.",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    route = "",
+                    navController = navController
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -193,13 +202,17 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                 CardItem(
                     title = "Education Hub",
                     description = "Access trusted information about cervical cancer, symptoms, and prevention.",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    route = EDUCATION_HUB_SCREEN,
+                    navController = navController
                 )
 
                 CardItem(
                     title = "Cancer Management",
                     description = "Monitor symptoms, track progress, and stay in control of your wellness journey.",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    route = "",
+                    navController = navController
                 )
             }
 
@@ -216,13 +229,13 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
 }
 
 @Composable
-fun CardItem(title: String, description: String, modifier: Modifier = Modifier) {
+fun CardItem(title: String, description: String, modifier: Modifier = Modifier, route: String, navController: NavHostController) {
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F8F8)),
         modifier = modifier
             .height(140.dp)
-            .clickable { /* Handle click */ }
+            .clickable { navController.navigate(route) }
     ) {
         Column(
             modifier = Modifier
