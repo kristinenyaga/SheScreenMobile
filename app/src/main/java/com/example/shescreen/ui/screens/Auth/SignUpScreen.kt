@@ -146,7 +146,7 @@ fun SignUpScreen(navController: NavHostController, viewModel: DataViewModel = vi
                 } else if (password.value != confirmPassword.value) {
                     Toast.makeText(context, "Passwords don't match", Toast.LENGTH_LONG).show()
                 } else {
-                    viewModel.signUp(email = email.toString(), password = password.toString())
+                    viewModel.signUp(email = email.value, password = password.value)
                     navController.navigate(BIO_DATA_SCREEN)
                 }
             },

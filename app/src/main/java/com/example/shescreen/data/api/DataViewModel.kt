@@ -15,6 +15,8 @@ class DataViewModel : ViewModel() {
             password = password,
         )
         RetrofitInstance.api.signUp(
+//           email = email,
+//            password = password
             request = body
         ).enqueue(object : Callback<SignUpResponse> {
             override fun onResponse(
@@ -24,7 +26,8 @@ class DataViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     Log.d("SignUp", "Success: ${response.body()}")
                 } else {
-                    Log.e("SignUp", "Failed: ${response.code()}")
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("SignUp", "Failed: ${response.code()}, Error: $errorBody")
                 }
             }
 
