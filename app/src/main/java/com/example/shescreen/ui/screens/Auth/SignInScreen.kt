@@ -32,14 +32,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.shescreen.data.api.DataViewModel
 import com.example.shescreen.ui.navigation.HOME_SCREEN
 import com.example.shescreen.ui.navigation.SIGN_UP_SCREEN
 import com.example.shescreen.ui.theme.SheScreenTheme
 
 @Composable
-fun SignInScreen(navController: NavHostController) {
+fun SignInScreen(navController: NavHostController, viewModel: DataViewModel = viewModel()) {
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 
@@ -119,7 +121,9 @@ fun SignInScreen(navController: NavHostController) {
         // Sign In Button
         Button(
             onClick = {
-              navController.navigate(HOME_SCREEN)
+                viewModel.signIn(email = email.value, password = password.value, onSuccess = {
+                    navController.navigate(HOME_SCREEN)
+                })
             },
             modifier = Modifier
                 .fillMaxWidth()

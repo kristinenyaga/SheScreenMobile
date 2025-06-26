@@ -40,6 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.shescreen.data.api.DataViewModel
+import com.example.shescreen.data.api.PrefsManager
 import com.example.shescreen.ui.navigation.BIO_DATA_SCREEN
 import com.example.shescreen.ui.navigation.HOME_SCREEN
 import com.example.shescreen.ui.navigation.SIGN_IN_SCREEN
@@ -48,11 +49,16 @@ import com.example.shescreen.ui.theme.SheScreenTheme
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SignUpScreen(navController: NavHostController, viewModel: DataViewModel = viewModel()) {
-    val email = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-    val confirmPassword = remember { mutableStateOf("") }
-    var context = LocalContext.current
+fun SignUpScreen(
+    navController: NavHostController,
+    prefsManager: PrefsManager,
+    viewModel: DataViewModel = viewModel(),
+) {
+    val email = remember { mutableStateOf("vicky@gmail.com") }
+    val password = remember { mutableStateOf("vicky1234") }
+    val confirmPassword = remember { mutableStateOf("vicky1234") }
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -110,7 +116,6 @@ fun SignUpScreen(navController: NavHostController, viewModel: DataViewModel = vi
             value = email.value,
             onValueChange = { email.value = it },
             label = { Text("Email") },
-            placeholder = { Text("johndoe@example.com") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -147,6 +152,7 @@ fun SignUpScreen(navController: NavHostController, viewModel: DataViewModel = vi
                     Toast.makeText(context, "Passwords don't match", Toast.LENGTH_LONG).show()
                 } else {
                     viewModel.signUp(email = email.value, password = password.value)
+                    prefsManager.saveUserDetails(email.value, password.value)
                     navController.navigate(BIO_DATA_SCREEN)
                 }
             },
@@ -206,6 +212,6 @@ fun SignUpScreen(navController: NavHostController, viewModel: DataViewModel = vi
 @Composable
 private fun SignUpScreenPreview() {
     SheScreenTheme {
-        SignUpScreen(rememberNavController())
+//        SignUpScreen(rememberNavController())
     }
 }

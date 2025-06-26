@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "991267044921",
+    "project_id": "shescreen-d80b3",
+    "storage_bucket": "shescreen-d80b3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991267044921:android:913bc38c162d86d17497e8",
+        "android_client_info": {
+          "package_name": "com.example.shescreen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWVHXx46fT-X-OhcZwbqy_CC5WIKf3uo4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

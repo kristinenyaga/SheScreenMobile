@@ -18,6 +18,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,20 +32,27 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.shescreen.data.api.DataViewModel
+import com.example.shescreen.data.api.PrefsManager
 import com.example.shescreen.ui.navigation.SIGN_IN_SCREEN
 import com.example.shescreen.ui.theme.SheScreenTheme
 
 @Composable
-fun BioDataScreen(navController: NavHostController) {
-    val firstName = remember { mutableStateOf("") }
-    val lastName = remember { mutableStateOf("") }
-    val phoneNumber = remember { mutableStateOf("") }
-    val dateOfBirth = remember { mutableStateOf("") }
-    val isParent = remember { mutableStateOf<Boolean?>(null) }
-
+fun BioDataScreen(
+    navController: NavHostController,
+    prefsManager: PrefsManager,
+    viewModel: DataViewModel = viewModel(),
+) {
+    val firstName = remember { mutableStateOf("Vicky") }
+    val lastName = remember { mutableStateOf("Bish") }
+    val phoneNumber = remember { mutableStateOf("0796358166") }
+    val dateOfBirth = remember { mutableStateOf("2003-01-03") }
+    val isParent = remember { mutableStateOf<Boolean?>(true) }
+    val signInData by viewModel.signInResponse.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -162,7 +171,20 @@ fun BioDataScreen(navController: NavHostController) {
 
         Button(
             onClick = {
-                navController.navigate(SIGN_IN_SCREEN)
+                val email = prefsManager.getUserDetail("email")
+                val password = prefsManager.getUserDetail("password")
+                viewModel.signIn("vicky@gmail.com", "vicky1234") { token ->
+                    // Now that we have the token, call profile
+                    viewModel.profile(
+                        dateOfBirth = dateOfBirth.value,
+                        firstName = firstName.value,
+                        lastName = lastName.value,
+                        phoneNumber = phoneNumber.value,
+                        isParent = isParent.value ?: false,
+                        token = "Bearer $token"
+                    )
+                    navController.navigate(SIGN_IN_SCREEN)
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -172,13 +194,5 @@ fun BioDataScreen(navController: NavHostController) {
         ) {
             Text("Submit", color = Color.White, fontSize = 16.sp)
         }
-    }
-}
-
-@Preview
-@Composable
-private fun BioDataScreenPreview() {
-    SheScreenTheme {
-        BioDataScreen(navController = rememberNavController())
     }
 }
