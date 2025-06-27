@@ -3,7 +3,6 @@ package com.example.shescreen.ui.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,11 +12,12 @@ import com.example.shescreen.ui.screens.Auth.SignInScreen
 import com.example.shescreen.ui.screens.Auth.SignUpScreen
 import com.example.shescreen.ui.screens.EducationHub.EducationHubScreen
 import com.example.shescreen.ui.screens.Home.HomeScreen
+import com.example.shescreen.ui.screens.RiskAssessment.RiskAssessmentScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NavigationGraph(modifier: Modifier = Modifier, navController: NavHostController, prefsManager: PrefsManager) {
-    NavHost(navController = navController, startDestination = SIGN_UP_SCREEN) {
+fun NavigationGraph(navController: NavHostController, prefsManager: PrefsManager) {
+    NavHost(navController = navController, startDestination = RISK_ASSESSMENT_SCREEN) {
         composable(SIGN_UP_SCREEN) {
             SignUpScreen(navController, prefsManager)
         }
@@ -34,6 +34,9 @@ fun NavigationGraph(modifier: Modifier = Modifier, navController: NavHostControl
         }
         composable(BIO_DATA_SCREEN) {
             BioDataScreen(navController, prefsManager)
+        }
+        composable(RISK_ASSESSMENT_SCREEN) {
+            RiskAssessmentScreen(navController = navController)
         }
     }
 }

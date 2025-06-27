@@ -44,6 +44,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.shescreen.R
 import com.example.shescreen.ui.navigation.EDUCATION_HUB_SCREEN
+import com.example.shescreen.ui.navigation.RISK_ASSESSMENT_SCREEN
 import com.example.shescreen.ui.theme.SheScreenTheme
 
 data class CarouselItem(
@@ -181,7 +182,7 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                     title = "Risk Assessment",
                     description = "Evaluate your health risk through guided questions and early warning signs.",
                     modifier = Modifier.weight(1f),
-                    route = "",
+                    route = RISK_ASSESSMENT_SCREEN,
                     navController = navController
                 )
 

@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.shescreen.data.api.PrefsManager
 import com.example.shescreen.ui.navigation.NavigationGraph
-import com.example.shescreen.ui.screens.Auth.SignUpScreen
 import com.example.shescreen.ui.theme.SheScreenTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +29,6 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavigationGraph(
                         navController = navController,
-                        modifier = Modifier.padding(innerPadding),
                         prefsManager = PrefsManager(context = LocalContext.current)
                     )
                 }
