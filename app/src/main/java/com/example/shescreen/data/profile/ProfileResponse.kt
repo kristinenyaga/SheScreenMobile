@@ -8,5 +8,6 @@ data class ProfileResponse(
     val is_parent: Boolean,
     val last_name: String,
     val phone_number: String,
+    val region: Any,
     val role: String
 )

@@ -14,12 +14,23 @@ class PrefsManager(context: Context) {
     ) {
         prefs.edit().apply {
             putString("email", email)
-            putString("contact", password)
+            putString("password", password)
+            apply()
+        }
+    }
+
+    fun saveAuthToken(
+        accessToken: String,
+    ) {
+        prefs.edit().apply {
+            putString("token", accessToken)
             apply()
         }
     }
 
     fun getUserDetail(key: String): String? = prefs.getString(key, null)
+
+    fun getAuthToken(key: String): String? = prefs.getString(key, null)
 
     fun clear() {
         prefs.edit() { clear() }

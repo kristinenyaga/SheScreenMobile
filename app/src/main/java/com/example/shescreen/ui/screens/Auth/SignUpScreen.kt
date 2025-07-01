@@ -23,6 +23,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -54,9 +55,12 @@ fun SignUpScreen(
     prefsManager: PrefsManager,
     viewModel: DataViewModel = viewModel(),
 ) {
-    val email = remember { mutableStateOf("vicky@gmail.com") }
-    val password = remember { mutableStateOf("vicky1234") }
-    val confirmPassword = remember { mutableStateOf("vicky1234") }
+    LaunchedEffect(Unit) {
+        prefsManager.clear()
+    }
+    val email = remember { mutableStateOf("esther@gmail.com") }
+    val password = remember { mutableStateOf("esther1234") }
+    val confirmPassword = remember { mutableStateOf("esther1234") }
     val context = LocalContext.current
 
     Column(
@@ -151,8 +155,7 @@ fun SignUpScreen(
                 } else if (password.value != confirmPassword.value) {
                     Toast.makeText(context, "Passwords don't match", Toast.LENGTH_LONG).show()
                 } else {
-                    viewModel.signUp(email = email.value, password = password.value)
-                    prefsManager.saveUserDetails(email.value, password.value)
+                    viewModel.signUp(email = email.value, password = password.value, context)
                     navController.navigate(BIO_DATA_SCREEN)
                 }
             },

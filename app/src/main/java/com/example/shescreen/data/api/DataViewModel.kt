@@ -1,14 +1,15 @@
 package com.example.shescreen.data.api
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.shescreen.data.profile.ProfileRequest
 import com.example.shescreen.data.profile.ProfileResponse
+import com.example.shescreen.data.riskAssessment.RiskAssessRequest
+import com.example.shescreen.data.riskAssessment.RiskAssessResponse
 import com.example.shescreen.data.signin.SignInResponse
 import com.example.shescreen.data.signup.SignUpRequest
 import com.example.shescreen.data.signup.SignUpResponse
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,11 +17,10 @@ import retrofit2.Response
 object AuthStore {
     var token: String? = null
 }
-class DataViewModel : ViewModel() {
-    private val _signInResponse = MutableStateFlow<SignInResponse?>(null)
-    val signInResponse: StateFlow<SignInResponse?> = _signInResponse
 
-    fun signUp(email: String, password: String) {
+class DataViewModel : ViewModel() {
+
+    fun signUp(email: String, password: String, context: Context) {
         val body = SignUpRequest(
             email = email,
             password = password,
@@ -34,6 +34,8 @@ class DataViewModel : ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     Log.d("SignUp", "Success: ${response.body()}")
+                    PrefsManager(context).clear()
+                    PrefsManager(context).saveUserDetails(email, password)
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e("SignUp", "Failed: ${response.code()}, Error: $errorBody")
@@ -45,7 +47,8 @@ class DataViewModel : ViewModel() {
             }
         })
     }
-    fun signIn(email: String, password: String, onSuccess: (String) -> Unit) {
+
+    fun signIn(email: String, password: String, onSuccess: (String) -> Unit, context: Context) {
         RetrofitInstance.api.signIn(
             email = email,
             password = password
@@ -59,6 +62,7 @@ class DataViewModel : ViewModel() {
                     AuthStore.token = accessToken
                     Log.d("SignIn", "Success: ${response.body()}")
                     accessToken?.let { onSuccess(it) }
+                    PrefsManager(context).saveAuthToken(accessToken.toString())
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e("SignIn", "Failed: ${response.code()}, Error: $errorBody")
@@ -77,19 +81,16 @@ class DataViewModel : ViewModel() {
         lastName: String,
         phoneNumber: String,
         isParent: Boolean,
+        region: String,
         token: String
     ) {
-//        val token = AuthStore.token
-//        if (token == null) {
-//            Log.e("Profile", "Access token is missing!")
-//            return
-//        }
         val body = ProfileRequest(
             date_of_birth = dateOfBirth,
             first_name = firstName,
             last_name = lastName,
             phone_number = phoneNumber,
-            is_parent = isParent
+            is_parent = isParent,
+            region = region
         )
         RetrofitInstance.api.profile(
             request = body,
@@ -109,6 +110,41 @@ class DataViewModel : ViewModel() {
 
             override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {
                 Log.e("Profile", "Error: ${t.message}")
+            }
+        })
+    }
+
+    fun riskAssessment(
+        sexualPartners: Int,
+        firstSexualIntercourseAge: Int,
+        smokingStatus: String,
+        stdHistory: String,
+        token: String
+    ) {
+        val body = RiskAssessRequest(
+            first_sexual_intercourse_age = firstSexualIntercourseAge,
+            number_of_sexual_partners = sexualPartners,
+            smoking_status = smokingStatus,
+            stds_history = stdHistory
+        )
+        RetrofitInstance.api.riskAssessment(
+            request = body,
+            token = token
+        ).enqueue(object : Callback<RiskAssessResponse> {
+            override fun onResponse(
+                call: Call<RiskAssessResponse>,
+                response: Response<RiskAssessResponse>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("SignUp", "Success: ${response.body()}")
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("SignUp", "Failed: ${response.code()}, Error: $errorBody")
+                }
+            }
+
+            override fun onFailure(call: Call<RiskAssessResponse>, t: Throwable) {
+                Log.e("SignUp", "Error: ${t.message}")
             }
         })
     }

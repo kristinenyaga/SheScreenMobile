@@ -1,5 +1,6 @@
 package com.example.shescreen.ui.screens.Auth
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -51,8 +53,10 @@ fun BioDataScreen(
     val lastName = remember { mutableStateOf("Bish") }
     val phoneNumber = remember { mutableStateOf("0796358166") }
     val dateOfBirth = remember { mutableStateOf("2003-01-03") }
+    val region = remember { mutableStateOf("Eldoret") }
     val isParent = remember { mutableStateOf<Boolean?>(true) }
-    val signInData by viewModel.signInResponse.collectAsState()
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -144,6 +148,15 @@ fun BioDataScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = region.value,
+            onValueChange = { region.value = it },
+            label = { Text("Region") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         Text("Are you a parent?", fontWeight = FontWeight.SemiBold)
@@ -173,18 +186,19 @@ fun BioDataScreen(
             onClick = {
                 val email = prefsManager.getUserDetail("email")
                 val password = prefsManager.getUserDetail("password")
-                viewModel.signIn("vicky@gmail.com", "vicky1234") { token ->
-                    // Now that we have the token, call profile
+                val token = prefsManager.getAuthToken("token")
+                viewModel.signIn(email.toString(), password.toString(), onSuccess = {
                     viewModel.profile(
                         dateOfBirth = dateOfBirth.value,
                         firstName = firstName.value,
                         lastName = lastName.value,
                         phoneNumber = phoneNumber.value,
                         isParent = isParent.value ?: false,
+                        region = region.value,
                         token = "Bearer $token"
                     )
                     navController.navigate(SIGN_IN_SCREEN)
-                }
+                }, context)
             },
             modifier = Modifier
                 .fillMaxWidth()

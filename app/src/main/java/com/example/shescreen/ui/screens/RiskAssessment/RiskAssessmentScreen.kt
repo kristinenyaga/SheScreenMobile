@@ -35,17 +35,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.shescreen.ui.navigation.SIGN_IN_SCREEN
-import com.example.shescreen.ui.screens.EducationHub.TopicCarousel
+import com.example.shescreen.data.api.DataViewModel
+import com.example.shescreen.data.api.PrefsManager
 
 @Composable
-fun RiskAssessmentScreen(modifier: Modifier = Modifier, navController: NavHostController) {
-    val age = remember { mutableStateOf("") }
+fun RiskAssessmentScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    viewModel: DataViewModel = viewModel(),
+    prefsManager: PrefsManager
+) {
     val sexualPartners = remember { mutableStateOf("") }
     val firstSexualEncounter = remember { mutableStateOf("") }
-    val smokes = remember { mutableStateOf<Boolean?>(null) }
-    val stdHistory = remember { mutableStateOf<Boolean?>(null) }
+    val smokes = remember { mutableStateOf<String?>(null) }
+    val stdHistory = remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = Modifier
@@ -130,18 +135,13 @@ fun RiskAssessmentScreen(modifier: Modifier = Modifier, navController: NavHostCo
             )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
-                value = age.value,
-                onValueChange = { age.value = it },
-                label = { Text("What's your age?") },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedTextField(
                 value = sexualPartners.value,
-                onValueChange = { sexualPartners.value = it },
-                label = { Text("Number of sexual partners?") },
+                onValueChange = { input ->
+                    if (input.all { it.isDigit() } || input.isEmpty()) {
+                        sexualPartners.value = input
+                    }
+                }, label = { Text("Number of sexual partners?") },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -149,9 +149,12 @@ fun RiskAssessmentScreen(modifier: Modifier = Modifier, navController: NavHostCo
 
             OutlinedTextField(
                 value = firstSexualEncounter.value,
-                onValueChange = { firstSexualEncounter.value = it },
-                label = { Text("Age during first sexual encounter?") },
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone),
+                onValueChange = { input ->
+                    if (input.all { it.isDigit() } || input.isEmpty()) {
+                        firstSexualEncounter.value = input
+                    }
+                }, label = { Text("Age during first sexual encounter?") },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -164,16 +167,16 @@ fun RiskAssessmentScreen(modifier: Modifier = Modifier, navController: NavHostCo
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
-                    selected = smokes.value == true,
-                    onClick = { smokes.value = true }
+                    selected = smokes.value == "Yes",
+                    onClick = { smokes.value = "Yes" }
                 )
                 Text("Yes")
 
                 Spacer(modifier = Modifier.width(16.dp))
 
                 RadioButton(
-                    selected = smokes.value == false,
-                    onClick = { smokes.value = false }
+                    selected = smokes.value == "No",
+                    onClick = { smokes.value = "No" }
                 )
                 Text("No")
             }
@@ -186,22 +189,33 @@ fun RiskAssessmentScreen(modifier: Modifier = Modifier, navController: NavHostCo
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
-                    selected = stdHistory.value == true,
-                    onClick = { stdHistory.value = true }
+                    selected = stdHistory.value == "Yes",
+                    onClick = { stdHistory.value = "Yes" }
                 )
                 Text("Yes")
 
                 Spacer(modifier = Modifier.width(16.dp))
 
                 RadioButton(
-                    selected = stdHistory.value == false,
-                    onClick = { stdHistory.value = false }
+                    selected = stdHistory.value == "No",
+                    onClick = { stdHistory.value = "No" }
                 )
                 Text("No")
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { },
+                onClick = {
+                    val partners = sexualPartners.value.toIntOrNull() ?: 0
+                    val firstAge = firstSexualEncounter.value.toIntOrNull() ?: 0
+                    val token = prefsManager.getAuthToken("token")
+                    viewModel.riskAssessment(
+                        sexualPartners = partners,
+                        firstSexualIntercourseAge = firstAge,
+                        smokingStatus = smokes.value ?: "No",
+                        stdHistory = stdHistory.value ?: "No",
+                        token = "Bearer $token"
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),

@@ -17,7 +17,7 @@ import com.example.shescreen.ui.screens.RiskAssessment.RiskAssessmentScreen
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationGraph(navController: NavHostController, prefsManager: PrefsManager) {
-    NavHost(navController = navController, startDestination = RISK_ASSESSMENT_SCREEN) {
+    NavHost(navController = navController, startDestination = SIGN_UP_SCREEN) {
         composable(SIGN_UP_SCREEN) {
             SignUpScreen(navController, prefsManager)
         }
@@ -36,7 +36,7 @@ fun NavigationGraph(navController: NavHostController, prefsManager: PrefsManager
             BioDataScreen(navController, prefsManager)
         }
         composable(RISK_ASSESSMENT_SCREEN) {
-            RiskAssessmentScreen(navController = navController)
+            RiskAssessmentScreen(navController = navController, prefsManager = prefsManager)
         }
     }
 }

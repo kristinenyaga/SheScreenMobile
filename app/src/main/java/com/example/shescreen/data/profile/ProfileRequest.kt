@@ -5,5 +5,6 @@ data class ProfileRequest(
     val first_name: String,
     val is_parent: Boolean,
     val last_name: String,
-    val phone_number: String
+    val phone_number: String,
+    val region: String
 )
