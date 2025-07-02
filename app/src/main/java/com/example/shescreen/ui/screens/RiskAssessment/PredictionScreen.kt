@@ -1,14 +1,25 @@
 package com.example.shescreen.ui.screens.RiskAssessment
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,22 +32,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.shescreen.data.api.DataViewModel
-import com.example.shescreen.data.riskAssessment.PredictionResponse
 
 @Composable
 fun PredictionScreen(
     navController: NavHostController,
-    viewModel: DataViewModel = viewModel()
+    viewModel: DataViewModel
 ) {
     val prediction by viewModel.prediction.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF7F7F7))
+            .verticalScroll(rememberScrollState())
     ) {
         // 🔹 Header
         Box(
@@ -109,7 +118,14 @@ fun PredictionScreen(
             // Cluster
             PredictionItem(
                 title = "Cluster",
-                value = "Cluster ${prediction?.prediction?.cluster} / 5"
+                value = "Cluster ${prediction?.prediction?.cluster} / 6"
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Urgency
+            PredictionItem(
+                title = "Risk Level",
+                value = prediction?.summary?.risk_level.toString()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -130,14 +146,6 @@ fun PredictionScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Frequency
-//            PredictionItem(
-//                title = "Screening Frequency",
-//                value = prediction.frequency
-//            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
             // Reason
             PredictionItem(
                 title = "Reason for Recommendation",
@@ -146,10 +154,18 @@ fun PredictionScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Urgency
+            // Reason
             PredictionItem(
-                title = "Risk Level",
-                value = prediction?.summary?.risk_level.toString()
+                title = "Additional Services",
+                value = prediction?.summary?.additional_services.toString()
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Reason
+            PredictionItem(
+                title = "Next Steps",
+                value = prediction?.summary?.next_steps.toString()
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -174,7 +190,7 @@ fun PredictionItem(title: String, value: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.inverseOnSurface, RoundedCornerShape(8.dp))
             .padding(12.dp)
     ) {
         Text(

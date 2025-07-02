@@ -18,16 +18,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Textsms
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -43,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.shescreen.R
+import com.example.shescreen.ui.navigation.CHAT_SCREEN
 import com.example.shescreen.ui.navigation.EDUCATION_HUB_SCREEN
 import com.example.shescreen.ui.navigation.RISK_ASSESSMENT_SCREEN
 import com.example.shescreen.ui.theme.SheScreenTheme
@@ -65,6 +71,8 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
             CarouselItem(4, R.drawable.prop, "gingerbread"),
         )
     }
+    var showDialog by remember { mutableStateOf(false) }
+
 
     Column(
         modifier = Modifier
@@ -206,30 +214,36 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                     route = EDUCATION_HUB_SCREEN,
                     navController = navController
                 )
-
-                CardItem(
-                    title = "Cancer Management",
-                    description = "Monitor symptoms, track progress, and stay in control of your wellness journey.",
-                    modifier = Modifier.weight(1f),
-                    route = "",
-                    navController = navController
-                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-//            CardItem(
-//                title = "Cervical cancer management",
-//                description = "Articles, guides and more for your wellness.",
-//                modifier = Modifier.fillMaxWidth()
-//            )
-
+            FloatingActionButton(
+                onClick = {
+                    showDialog = true
+                    navController.navigate(CHAT_SCREEN)
+                },
+                containerColor = Color(0xFF1A7F8F),
+                contentColor = Color(0xFF2BAFBF),
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Textsms,
+                    contentDescription = "Message"
+                )
+            }
         }
     }
 }
 
 @Composable
-fun CardItem(title: String, description: String, modifier: Modifier = Modifier, route: String, navController: NavHostController) {
+fun CardItem(
+    title: String,
+    description: String,
+    modifier: Modifier = Modifier,
+    route: String,
+    navController: NavHostController
+) {
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F8F8)),

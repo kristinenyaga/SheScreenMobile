@@ -47,7 +47,7 @@ import kotlinx.coroutines.delay
 fun RiskAssessmentScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: DataViewModel = viewModel(),
+    viewModel: DataViewModel,
     prefsManager: PrefsManager
 ) {
     val sexualPartners = remember { mutableStateOf("5") }
@@ -220,9 +220,10 @@ fun RiskAssessmentScreen(
                         token = "Bearer $token"
                     )
                     viewModel.getPrediction(
-                        token = "Bearer $token"
+                        token = "Bearer $token", onResult = {
+                            navController.navigate(PREDICTION_SCREEN)
+                        }
                     )
-                    navController.navigate(PREDICTION_SCREEN)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

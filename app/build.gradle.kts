@@ -70,6 +70,5 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore:25.1.4")
     implementation("com.google.firebase:firebase-database:21.0.0")
-
-
+    implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
 }

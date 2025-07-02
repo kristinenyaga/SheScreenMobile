@@ -1,5 +1,6 @@
 package com.example.shescreen.data.api
 
+import com.example.shescreen.data.chat.ChatResponse
 import com.example.shescreen.data.profile.ProfileRequest
 import com.example.shescreen.data.profile.ProfileResponse
 import com.example.shescreen.data.riskAssessment.PredictionResponse
@@ -17,6 +18,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface DataAPI {
 
@@ -47,5 +49,11 @@ interface DataAPI {
     @GET("risk-prediction")
     fun getPrediction(
         @Header("Authorization") token: String,
-    ): Call <PredictionResponse>
+    ): Call<PredictionResponse>
+
+    @GET("conversation")
+    fun chatBot(
+        @Header("Authorization") token: String,
+        @Query("query") query: String,
+    ): Call<ChatResponse>
 }

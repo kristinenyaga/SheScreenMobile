@@ -3,14 +3,17 @@ package com.example.shescreen.ui.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.shescreen.data.api.DataViewModel
 import com.example.shescreen.data.api.PrefsManager
 import com.example.shescreen.data.riskAssessment.PredictionResponse
 import com.example.shescreen.ui.screens.Auth.BioDataScreen
 import com.example.shescreen.ui.screens.Auth.SignInScreen
 import com.example.shescreen.ui.screens.Auth.SignUpScreen
+import com.example.shescreen.ui.screens.Chat.ChatScreen
 import com.example.shescreen.ui.screens.EducationHub.EducationHubScreen
 import com.example.shescreen.ui.screens.Home.HomeScreen
 import com.example.shescreen.ui.screens.RiskAssessment.PredictionScreen
@@ -19,7 +22,10 @@ import com.example.shescreen.ui.screens.RiskAssessment.RiskAssessmentScreen
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationGraph(navController: NavHostController, prefsManager: PrefsManager) {
-    NavHost(navController = navController, startDestination = SIGN_IN_SCREEN) {
+    val dataViewModel: DataViewModel = viewModel()
+
+    NavHost(navController = navController, startDestination = SIGN_IN_SCREEN
+    ) {
         composable(SIGN_UP_SCREEN) {
             SignUpScreen(navController, prefsManager)
         }
@@ -38,10 +44,13 @@ fun NavigationGraph(navController: NavHostController, prefsManager: PrefsManager
             BioDataScreen(navController, prefsManager)
         }
         composable(RISK_ASSESSMENT_SCREEN) {
-            RiskAssessmentScreen(navController = navController, prefsManager = prefsManager)
+            RiskAssessmentScreen(navController = navController, prefsManager = prefsManager, viewModel = dataViewModel)
         }
         composable(PREDICTION_SCREEN) {
-            PredictionScreen( navController)
+            PredictionScreen( navController, viewModel = dataViewModel)
+        }
+        composable(CHAT_SCREEN) {
+            ChatScreen( navController = navController, prefsManager = prefsManager)
         }
     }
 }

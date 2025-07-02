@@ -3,6 +3,7 @@ package com.example.shescreen.data.api
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.shescreen.data.chat.ChatResponse
 import com.example.shescreen.data.profile.ProfileRequest
 import com.example.shescreen.data.profile.ProfileResponse
 import com.example.shescreen.data.riskAssessment.PredictionResponse
@@ -23,6 +24,11 @@ object AuthStore {
 }
 
 class DataViewModel : ViewModel() {
+    private val _prediction = MutableStateFlow<PredictionResponse?>(null)
+    val prediction: StateFlow<PredictionResponse?> = _prediction.asStateFlow()
+
+   private val _botResponse = MutableStateFlow<ChatResponse?>(null)
+    val botResponse: StateFlow<ChatResponse?> = _botResponse.asStateFlow()
 
     fun signUp(email: String, password: String, context: Context) {
         val body = SignUpRequest(
@@ -140,23 +146,20 @@ class DataViewModel : ViewModel() {
                 response: Response<RiskAssessResponse>
             ) {
                 if (response.isSuccessful) {
-                    Log.d("Prediction", "Success: ${response.body()}")
+                    Log.d("Risk Assessment", "Success: ${response.body()}")
                 } else {
                     val errorBody = response.errorBody()?.string()
-                    Log.e("Prediction", "Failed: ${response.code()}, Error: $errorBody")
+                    Log.e("Risk Assessment", "Failed: ${response.code()}, Error: $errorBody")
                 }
             }
 
             override fun onFailure(call: Call<RiskAssessResponse>, t: Throwable) {
-                Log.e("Prediction", "Error: ${t.message}")
+                Log.e("Risk Assessment", "Error: ${t.message}")
             }
         })
     }
 
-    private val _prediction = MutableStateFlow<PredictionResponse?>(null)
-    val prediction: StateFlow<PredictionResponse?> = _prediction.asStateFlow()
-
-    fun getPrediction(token: String) {
+    fun getPrediction(token: String, onResult: () -> Unit) {
         RetrofitInstance.api.getPrediction(
             token = token
         ).enqueue(object : Callback<PredictionResponse> {
@@ -166,17 +169,45 @@ class DataViewModel : ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     val body = response.body()
-                    Log.d("Risk Assessment", "Success: $body")
+                    Log.d("Prediction", "Success: $body")
                     _prediction.value = body
+                    onResult()
                 } else {
                     val errorBody = response.errorBody()?.string()
-                    Log.e("Risk Assessment", "Failed: ${response.code()}, Error: $errorBody")
+                    Log.e("Prediction", "Failed: ${response.code()}, Error: $errorBody")
                     _prediction.value = null
                 }
             }
 
             override fun onFailure(call: Call<PredictionResponse>, t: Throwable) {
-                Log.e("Risk Assessment", "Error: ${t.message}")
+                Log.e("Prediction", "Error: ${t.message}")
+                _prediction.value = null
+            }
+        })
+    }
+
+    fun chatBot(token: String, query: String){
+        RetrofitInstance.api.chatBot(
+            token = token,
+            query = query
+        ).enqueue(object : Callback<ChatResponse> {
+            override fun onResponse(
+                call: Call<ChatResponse>,
+                response: Response<ChatResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("Chat", "Success: $body")
+                    _botResponse.value = body
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("Chat", "Failed: ${response.code()}, Error: $errorBody")
+                    _prediction.value = null
+                }
+            }
+
+            override fun onFailure(call: Call<ChatResponse>, t: Throwable) {
+                Log.e("Chat", "Error: ${t.message}")
                 _prediction.value = null
             }
         })
