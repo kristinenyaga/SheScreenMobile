@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.shescreen.data.api.PrefsManager
+import com.example.shescreen.data.riskAssessment.PredictionResponse
 import com.example.shescreen.ui.navigation.NavigationGraph
 import com.example.shescreen.ui.theme.SheScreenTheme
 
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavigationGraph(
                         navController = navController,
-                        prefsManager = PrefsManager(context = LocalContext.current)
+                        prefsManager = PrefsManager(context = LocalContext.current),
                     )
                 }
             }

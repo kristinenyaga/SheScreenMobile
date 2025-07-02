@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,6 +40,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.shescreen.data.api.DataViewModel
 import com.example.shescreen.data.api.PrefsManager
+import com.example.shescreen.ui.navigation.PREDICTION_SCREEN
+import kotlinx.coroutines.delay
 
 @Composable
 fun RiskAssessmentScreen(
@@ -47,10 +50,11 @@ fun RiskAssessmentScreen(
     viewModel: DataViewModel = viewModel(),
     prefsManager: PrefsManager
 ) {
-    val sexualPartners = remember { mutableStateOf("") }
-    val firstSexualEncounter = remember { mutableStateOf("") }
-    val smokes = remember { mutableStateOf<String?>(null) }
-    val stdHistory = remember { mutableStateOf<String?>(null) }
+    val sexualPartners = remember { mutableStateOf("5") }
+    val firstSexualEncounter = remember { mutableStateOf("19") }
+    val smokes = remember { mutableStateOf<String?>("Yes") }
+    val stdHistory = remember { mutableStateOf<String?>("No") }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -215,6 +219,10 @@ fun RiskAssessmentScreen(
                         stdHistory = stdHistory.value ?: "No",
                         token = "Bearer $token"
                     )
+                    viewModel.getPrediction(
+                        token = "Bearer $token"
+                    )
+                    navController.navigate(PREDICTION_SCREEN)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

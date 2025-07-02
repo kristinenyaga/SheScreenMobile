@@ -5,11 +5,15 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.shescreen.data.profile.ProfileRequest
 import com.example.shescreen.data.profile.ProfileResponse
+import com.example.shescreen.data.riskAssessment.PredictionResponse
 import com.example.shescreen.data.riskAssessment.RiskAssessRequest
 import com.example.shescreen.data.riskAssessment.RiskAssessResponse
 import com.example.shescreen.data.signin.SignInResponse
 import com.example.shescreen.data.signup.SignUpRequest
 import com.example.shescreen.data.signup.SignUpResponse
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -136,18 +140,45 @@ class DataViewModel : ViewModel() {
                 response: Response<RiskAssessResponse>
             ) {
                 if (response.isSuccessful) {
-                    Log.d("SignUp", "Success: ${response.body()}")
+                    Log.d("Prediction", "Success: ${response.body()}")
                 } else {
                     val errorBody = response.errorBody()?.string()
-                    Log.e("SignUp", "Failed: ${response.code()}, Error: $errorBody")
+                    Log.e("Prediction", "Failed: ${response.code()}, Error: $errorBody")
                 }
             }
 
             override fun onFailure(call: Call<RiskAssessResponse>, t: Throwable) {
-                Log.e("SignUp", "Error: ${t.message}")
+                Log.e("Prediction", "Error: ${t.message}")
             }
         })
     }
 
+    private val _prediction = MutableStateFlow<PredictionResponse?>(null)
+    val prediction: StateFlow<PredictionResponse?> = _prediction.asStateFlow()
 
+    fun getPrediction(token: String) {
+        RetrofitInstance.api.getPrediction(
+            token = token
+        ).enqueue(object : Callback<PredictionResponse> {
+            override fun onResponse(
+                call: Call<PredictionResponse>,
+                response: Response<PredictionResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("Risk Assessment", "Success: $body")
+                    _prediction.value = body
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("Risk Assessment", "Failed: ${response.code()}, Error: $errorBody")
+                    _prediction.value = null
+                }
+            }
+
+            override fun onFailure(call: Call<PredictionResponse>, t: Throwable) {
+                Log.e("Risk Assessment", "Error: ${t.message}")
+                _prediction.value = null
+            }
+        })
+    }
 }
