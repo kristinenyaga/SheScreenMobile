@@ -14,6 +14,7 @@ import com.example.shescreen.ui.screens.Auth.BioDataScreen
 import com.example.shescreen.ui.screens.Auth.SignInScreen
 import com.example.shescreen.ui.screens.Auth.SignUpScreen
 import com.example.shescreen.ui.screens.Chat.ChatScreen
+import com.example.shescreen.ui.screens.EducationHub.EducationDetailScreen
 import com.example.shescreen.ui.screens.EducationHub.EducationHubScreen
 import com.example.shescreen.ui.screens.Home.HomeScreen
 import com.example.shescreen.ui.screens.RiskAssessment.PredictionScreen
@@ -24,7 +25,7 @@ import com.example.shescreen.ui.screens.RiskAssessment.RiskAssessmentScreen
 fun NavigationGraph(navController: NavHostController, prefsManager: PrefsManager) {
     val dataViewModel: DataViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = SIGN_IN_SCREEN
+    NavHost(navController = navController, startDestination = HOME_SCREEN
     ) {
         composable(SIGN_UP_SCREEN) {
             SignUpScreen(navController, prefsManager)
@@ -52,5 +53,12 @@ fun NavigationGraph(navController: NavHostController, prefsManager: PrefsManager
         composable(CHAT_SCREEN) {
             ChatScreen( navController = navController, prefsManager = prefsManager)
         }
+        composable("educationDetail/{contentId}") { backStackEntry ->
+            val contentId = backStackEntry.arguments?.getString("contentId")?.toIntOrNull()
+            contentId?.let {
+                EducationDetailScreen(contentId = it, navController = navController)
+            }
+        }
+
     }
 }

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -71,4 +72,13 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:25.1.4")
     implementation("com.google.firebase:firebase-database:21.0.0")
     implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
+    // Network Image
+    implementation(libs.coil.compose)
+
+    // Supabase
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.realtime.kt)
+    implementation(libs.postgrest.kt)
+    implementation(libs.ktor.client.android)
+    implementation(libs.kotlinx.serialization.json)
 }

@@ -16,6 +16,11 @@ material = "1.8.3"
 navigationCompose = "2.9.0"
 retrofit = "2.9.0"
 runtimeLivedata = "1.8.3"
+coilCompose = "2.6.0"
+kotlinxSerializationJson = "1.6.3"
+ktorClientAndroid = "2.3.12"
+supabase = "2.5.2"
+
 
 [libraries]
 accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPagerIndicators" }
@@ -41,6 +46,12 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+realtime-kt = { module = "io.github.jan-tennert.supabase:realtime-kt" }
+supabase-bom = { group = "io.github.jan-tennert.supabase", name = "bom", version.ref = "supabase" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorClientAndroid" }
+postgrest-kt = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

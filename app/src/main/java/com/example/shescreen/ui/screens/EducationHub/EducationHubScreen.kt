@@ -1,7 +1,7 @@
 package com.example.shescreen.ui.screens.EducationHub
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,58 +18,39 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.shescreen.R
-import com.example.shescreen.ui.screens.Home.CarouselItem
+import coil.compose.AsyncImage
+import com.example.shescreen.data.cms.EducationHubViewModel
 
 data class CarouselCategory(
     val title: String,
     val items: List<CarouselItem>
 )
 
+data class CarouselItem(
+    val id: Int,
+    val imageUrl: String,
+    val contentDescription: String
+)
+
 @Composable
-fun EducationHubScreen(modifier: Modifier = Modifier, navController: NavHostController) {
-    // ✅ Dummy data
-    val categories = remember {
-        listOf(
-            CarouselCategory(
-                title = "Cervical Cancer",
-                items = listOf(
-                    CarouselItem(0, R.drawable.prop, "What is cervical cancer?"),
-                    CarouselItem(1, R.drawable.prop, "Symptoms and signs"),
-                    CarouselItem(2, R.drawable.prop, "Causes and risk factors")
-                )
-            ),
-            CarouselCategory(
-                title = "Treatment",
-                items = listOf(
-                    CarouselItem(1, R.drawable.prop, "Treatment options"),
-                    CarouselItem(2, R.drawable.prop, "Chemotherapy"),
-                    CarouselItem(3, R.drawable.prop, "Surgery")
-                )
-            ),
-            CarouselCategory(
-                title = "Prevention",
-                items = listOf(
-                    CarouselItem(1, R.drawable.prop, "HPV Vaccination"),
-                    CarouselItem(2, R.drawable.prop, "Routine screening"),
-                    CarouselItem(3, R.drawable.prop, "Healthy lifestyle")
-                )
-            )
-        )
-    }
+fun EducationHubScreen(
+    modifier: Modifier = Modifier, navController: NavHostController,
+    viewModel: EducationHubViewModel = viewModel()
+) {
+    val categories by viewModel.carouselCategories
 
     Column(
         modifier = modifier
@@ -119,10 +100,19 @@ fun EducationHubScreen(modifier: Modifier = Modifier, navController: NavHostCont
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+            if (categories.isEmpty()) {
+                Text(
+                    "No content available",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
 
             // 🔄 Loop through each category and show carousel
             categories.forEach { category ->
-                TopicCarousel(title = category.title, items = category.items)
+                TopicCarousel(title = category.title, items = category.items, navController = navController)
             }
         }
     }
@@ -130,7 +120,7 @@ fun EducationHubScreen(modifier: Modifier = Modifier, navController: NavHostCont
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopicCarousel(title: String, items: List<CarouselItem>) {
+fun TopicCarousel(title: String, items: List<CarouselItem>, navController: NavHostController) {
     Column(modifier = Modifier.padding(vertical = 12.dp)) {
         Text(
             text = title,
@@ -149,6 +139,9 @@ fun TopicCarousel(title: String, items: List<CarouselItem>) {
             Box(
                 modifier = Modifier
                     .height(205.dp)
+                    .clickable {
+                        navController.navigate("educationDetail/${item.id}")
+                    }
                     .maskClip(MaterialTheme.shapes.extraLarge)
                     .background(Color.Gray) // 🔁 Replace with image later
             ) {
@@ -160,14 +153,15 @@ fun TopicCarousel(title: String, items: List<CarouselItem>) {
                         .alpha(0.75f)
                 ) {
                     // Placeholder image or color for now
-                    Image(
-                        painter = painterResource(id = item.imageResId),
+                    AsyncImage(
+                        model = item.imageUrl,
                         contentDescription = item.contentDescription,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillMaxSize()
                             .alpha(0.75f)
                     )
+
                 }
 
                 Box(

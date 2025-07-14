@@ -51,9 +51,10 @@ import com.example.shescreen.R
 import com.example.shescreen.ui.navigation.CHAT_SCREEN
 import com.example.shescreen.ui.navigation.EDUCATION_HUB_SCREEN
 import com.example.shescreen.ui.navigation.RISK_ASSESSMENT_SCREEN
+import com.example.shescreen.ui.screens.EducationHub.CarouselItem
 import com.example.shescreen.ui.theme.SheScreenTheme
 
-data class CarouselItem(
+data class CarouselItems(
     val id: Int,
     @DrawableRes val imageResId: Int,
     val contentDescription: String
@@ -64,11 +65,11 @@ data class CarouselItem(
 fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) {
     val items = remember {
         listOf(
-            CarouselItem(0, R.drawable.prop, "cupcake"),
-            CarouselItem(1, R.drawable.prop, "donut"),
-            CarouselItem(2, R.drawable.prop, "eclair"),
-            CarouselItem(3, R.drawable.prop, "froyo"),
-            CarouselItem(4, R.drawable.prop, "gingerbread"),
+            CarouselItems(0, R.drawable.prop, "cupcake"),
+            CarouselItems(1, R.drawable.prop, "donut"),
+            CarouselItems(2, R.drawable.prop, "eclair"),
+            CarouselItems(3, R.drawable.prop, "froyo"),
+            CarouselItems(4, R.drawable.prop, "gingerbread"),
         )
     }
     var showDialog by remember { mutableStateOf(false) }
