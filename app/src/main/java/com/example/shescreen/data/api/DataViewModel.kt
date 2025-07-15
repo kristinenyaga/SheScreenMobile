@@ -1,9 +1,15 @@
 package com.example.shescreen.data.api
 
 import android.content.Context
+import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.shescreen.data.api.RetrofitInstance.createStkPushService
+import com.example.shescreen.data.api.RetrofitInstance.createTokenService
 import com.example.shescreen.data.chat.ChatResponse
+import com.example.shescreen.data.daraja.StkPushRequest
+import com.example.shescreen.data.daraja.StkPushResponse
+import com.example.shescreen.data.daraja.TokenResponse
 import com.example.shescreen.data.profile.ProfileRequest
 import com.example.shescreen.data.profile.ProfileResponse
 import com.example.shescreen.data.riskAssessment.PredictionResponse
@@ -27,7 +33,7 @@ class DataViewModel : ViewModel() {
     private val _prediction = MutableStateFlow<PredictionResponse?>(null)
     val prediction: StateFlow<PredictionResponse?> = _prediction.asStateFlow()
 
-   private val _botResponse = MutableStateFlow<ChatResponse?>(null)
+    private val _botResponse = MutableStateFlow<ChatResponse?>(null)
     val botResponse: StateFlow<ChatResponse?> = _botResponse.asStateFlow()
 
     fun signUp(email: String, password: String, context: Context) {
@@ -186,7 +192,7 @@ class DataViewModel : ViewModel() {
         })
     }
 
-    fun chatBot(token: String, query: String){
+    fun chatBot(token: String, query: String) {
         RetrofitInstance.api.chatBot(
             token = token,
             query = query
@@ -212,4 +218,73 @@ class DataViewModel : ViewModel() {
             }
         })
     }
+
+    fun initiateStkPush(phone: String, amount: Int) {
+        val tokenService = createTokenService()
+        tokenService.getAccessToken().enqueue(object : Callback<TokenResponse> {
+            override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
+                if (response.isSuccessful) {
+                    val token = "Bearer ${response.body()?.accessToken}"
+                    Log.d("Daraja", "✅ Access token: $token")
+
+                    val timestamp = getTimestamp()
+                    val password = getPassword(
+                        shortCode = "174379",
+                        passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",
+                        timestamp = timestamp
+                    )
+
+                    val stkPushRequest = StkPushRequest(
+                        BusinessShortCode = "174379",
+                        Password = password,
+                        Timestamp = timestamp,
+                        TransactionType = "CustomerPayBillOnline",
+                        Amount = amount.toString(),
+                        PartyA = "600584",
+                        PartyB = "174379",
+                        PhoneNumber = phone,
+                        CallBackURL = "https://example.com/callback",
+                        AccountReference = "Test123",
+                        TransactionDesc = "Test Payment"
+                    )
+
+                    val stkService = createStkPushService()
+                    stkService.stkPush(stkPushRequest, token).enqueue(object : Callback<StkPushResponse> {
+                        override fun onResponse(
+                            call: Call<StkPushResponse>,
+                            response: Response<StkPushResponse>
+                        ) {
+                            if (response.isSuccessful) {
+                                val body = response.body()
+                                Log.d("STK_PUSH", "✅ CustomerMessage: ${body?.CustomerMessage}")
+                            } else {
+                                Log.e("STK_PUSH", "❌ Error: ${response.errorBody()?.string()}")
+                            }
+                        }
+
+                        override fun onFailure(call: Call<StkPushResponse>, t: Throwable) {
+                            Log.e("STK_PUSH", "❌ Failure: ${t.message}")
+                        }
+                    })
+                } else {
+                    Log.e("Daraja", "❌ Failed to get token: ${response.errorBody()?.string()}")
+                }
+            }
+
+            override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                Log.e("Daraja", "Token error: ${t.message}")
+            }
+        })
+    }
+
+}
+
+fun getTimestamp(): String {
+    val sdf = java.text.SimpleDateFormat("yyyyMMddHHmmss", java.util.Locale.getDefault())
+    return sdf.format(java.util.Date())
+}
+
+fun getPassword(shortCode: String, passkey: String, timestamp: String): String {
+    val raw = shortCode + passkey + timestamp
+    return Base64.encodeToString(raw.toByteArray(), Base64.NO_WRAP)
 }

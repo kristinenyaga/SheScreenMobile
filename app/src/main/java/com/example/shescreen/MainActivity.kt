@@ -7,13 +7,16 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.shescreen.data.api.DataViewModel
 import com.example.shescreen.data.api.PrefsManager
 import com.example.shescreen.data.riskAssessment.PredictionResponse
 import com.example.shescreen.ui.navigation.NavigationGraph
@@ -31,7 +34,10 @@ class MainActivity : ComponentActivity() {
                     NavigationGraph(
                         navController = navController,
                         prefsManager = PrefsManager(context = LocalContext.current),
+                        modifier = Modifier.padding(innerPadding)
                     )
+                    val viewModel: DataViewModel = viewModel()
+//                    viewModel.getAccessToken()
                 }
             }
         }

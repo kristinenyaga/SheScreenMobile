@@ -67,11 +67,11 @@ dependencies {
     implementation (libs.converter.gson)
     implementation (libs.androidx.runtime.livedata)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
-    implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-firestore:25.1.4")
-    implementation("com.google.firebase:firebase-database:21.0.0")
-    implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.database)
+    implementation(libs.androidx.material.icons.extended.android)
     // Network Image
     implementation(libs.coil.compose)
 
@@ -81,4 +81,7 @@ dependencies {
     implementation(libs.postgrest.kt)
     implementation(libs.ktor.client.android)
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.converter.gson.v300)
+    implementation(libs.logging.interceptor)
 }

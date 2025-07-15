@@ -51,6 +51,7 @@ import com.example.shescreen.R
 import com.example.shescreen.ui.navigation.CHAT_SCREEN
 import com.example.shescreen.ui.navigation.EDUCATION_HUB_SCREEN
 import com.example.shescreen.ui.navigation.RISK_ASSESSMENT_SCREEN
+import com.example.shescreen.ui.navigation.SERVICES_SCREEN
 import com.example.shescreen.ui.screens.EducationHub.CarouselItem
 import com.example.shescreen.ui.theme.SheScreenTheme
 
@@ -199,7 +200,7 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                     title = "Services",
                     description = "Locate nearby hospitals, clinics, and support centers with ease.",
                     modifier = Modifier.weight(1f),
-                    route = "",
+                    route = SERVICES_SCREEN,
                     navController = navController
                 )
             }
