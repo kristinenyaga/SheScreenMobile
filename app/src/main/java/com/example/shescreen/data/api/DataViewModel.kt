@@ -15,6 +15,7 @@ import com.example.shescreen.data.profile.ProfileResponse
 import com.example.shescreen.data.riskAssessment.PredictionResponse
 import com.example.shescreen.data.riskAssessment.RiskAssessRequest
 import com.example.shescreen.data.riskAssessment.RiskAssessResponse
+import com.example.shescreen.data.services.ServicesResponse
 import com.example.shescreen.data.signin.SignInResponse
 import com.example.shescreen.data.signup.SignUpRequest
 import com.example.shescreen.data.signup.SignUpResponse
@@ -32,6 +33,9 @@ object AuthStore {
 class DataViewModel : ViewModel() {
     private val _prediction = MutableStateFlow<PredictionResponse?>(null)
     val prediction: StateFlow<PredictionResponse?> = _prediction.asStateFlow()
+
+    private val _services = MutableStateFlow<ServicesResponse?>(null)
+    val services: StateFlow<ServicesResponse?> = _services.asStateFlow()
 
     private val _botResponse = MutableStateFlow<ChatResponse?>(null)
     val botResponse: StateFlow<ChatResponse?> = _botResponse.asStateFlow()
@@ -219,6 +223,28 @@ class DataViewModel : ViewModel() {
         })
     }
 
+    fun getServicesCost() {
+        RetrofitInstance.api.getServicesCost().enqueue(object : Callback<ServicesResponse> {
+            override fun onResponse(
+                call: Call<ServicesResponse>,
+                response: Response<ServicesResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("Services", "Success: $body")
+                    _services.value = body
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("Services", "Failed: ${response.code()}, Error: $errorBody")
+                }
+            }
+
+            override fun onFailure(call: Call<ServicesResponse>, t: Throwable) {
+                Log.e("Services", "Error: ${t.message}")
+            }
+        })
+    }
+
     fun initiateStkPush(phone: String, amount: Int) {
         val tokenService = createTokenService()
         tokenService.getAccessToken().enqueue(object : Callback<TokenResponse> {
@@ -249,23 +275,24 @@ class DataViewModel : ViewModel() {
                     )
 
                     val stkService = createStkPushService()
-                    stkService.stkPush(stkPushRequest, token).enqueue(object : Callback<StkPushResponse> {
-                        override fun onResponse(
-                            call: Call<StkPushResponse>,
-                            response: Response<StkPushResponse>
-                        ) {
-                            if (response.isSuccessful) {
-                                val body = response.body()
-                                Log.d("STK_PUSH", "✅ CustomerMessage: ${body?.CustomerMessage}")
-                            } else {
-                                Log.e("STK_PUSH", "❌ Error: ${response.errorBody()?.string()}")
+                    stkService.stkPush(stkPushRequest, token)
+                        .enqueue(object : Callback<StkPushResponse> {
+                            override fun onResponse(
+                                call: Call<StkPushResponse>,
+                                response: Response<StkPushResponse>
+                            ) {
+                                if (response.isSuccessful) {
+                                    val body = response.body()
+                                    Log.d("STK_PUSH", "✅ CustomerMessage: ${body?.CustomerMessage}")
+                                } else {
+                                    Log.e("STK_PUSH", "❌ Error: ${response.errorBody()?.string()}")
+                                }
                             }
-                        }
 
-                        override fun onFailure(call: Call<StkPushResponse>, t: Throwable) {
-                            Log.e("STK_PUSH", "❌ Failure: ${t.message}")
-                        }
-                    })
+                            override fun onFailure(call: Call<StkPushResponse>, t: Throwable) {
+                                Log.e("STK_PUSH", "❌ Failure: ${t.message}")
+                            }
+                        })
                 } else {
                     Log.e("Daraja", "❌ Failed to get token: ${response.errorBody()?.string()}")
                 }

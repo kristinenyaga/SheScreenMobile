@@ -6,6 +6,7 @@ import com.example.shescreen.data.profile.ProfileResponse
 import com.example.shescreen.data.riskAssessment.PredictionResponse
 import com.example.shescreen.data.riskAssessment.RiskAssessRequest
 import com.example.shescreen.data.riskAssessment.RiskAssessResponse
+import com.example.shescreen.data.services.ServicesResponse
 import com.example.shescreen.data.signin.SignInResponse
 import com.example.shescreen.data.signup.SignUpRequest
 import com.example.shescreen.data.signup.SignUpResponse
@@ -56,4 +57,8 @@ interface DataAPI {
         @Header("Authorization") token: String,
         @Query("query") query: String,
     ): Call<ChatResponse>
+
+    @GET("service-costs/")
+    fun getServicesCost(
+    ): Call<ServicesResponse>
 }
