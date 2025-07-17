@@ -1,5 +1,6 @@
 package com.example.shescreen.ui.screens.Home
 
+import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -47,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -54,9 +56,11 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.shescreen.R
+import com.example.shescreen.data.api.DataViewModel
 import com.example.shescreen.data.messaging.BackgroundFetchWorker
 import com.example.shescreen.ui.navigation.CHAT_SCREEN
 import com.example.shescreen.ui.navigation.EDUCATION_HUB_SCREEN
+import com.example.shescreen.ui.navigation.HEALTH_SCREEN
 import com.example.shescreen.ui.navigation.RISK_ASSESSMENT_SCREEN
 import com.example.shescreen.ui.navigation.SERVICES_SCREEN
 import com.example.shescreen.ui.screens.EducationHub.CarouselItem
@@ -72,7 +76,11 @@ data class CarouselItems(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    viewModel: DataViewModel = viewModel()
+) {
     val context = LocalContext.current
 
 //    LaunchedEffect(Unit) {
@@ -230,16 +238,16 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 CardItem(
-                    title = "Risk Assessment",
-                    description = "Evaluate your health risk through guided questions and early warning signs.",
+                    title = "Education Hub",
+                    description = "Access trusted information about cervical cancer, symptoms, and prevention.",
                     modifier = Modifier.weight(1f),
-                    route = RISK_ASSESSMENT_SCREEN,
+                    route = EDUCATION_HUB_SCREEN,
                     navController = navController
                 )
 
                 CardItem(
                     title = "Services",
-                    description = "Locate nearby hospitals, clinics, and support centers with ease.",
+                    description = "View the services offered and their prices.",
                     modifier = Modifier.weight(1f),
                     route = SERVICES_SCREEN,
                     navController = navController
@@ -250,16 +258,22 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                CardItem(
-                    title = "Education Hub",
-                    description = "Access trusted information about cervical cancer, symptoms, and prevention.",
-                    modifier = Modifier.weight(1f),
-                    route = EDUCATION_HUB_SCREEN,
-                    navController = navController
-                )
+                //Results/Recommendation
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    CardItem(
+                        title = "My Health Summary",
+                        description = "View your recent recommendations, lab test results, and follow-ups.",
+                        modifier = Modifier.fillMaxWidth(),
+                        route = HEALTH_SCREEN, // Replace with actual route
+                        navController = navController
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             FloatingActionButton(
                 onClick = {

@@ -50,7 +50,7 @@ class DataViewModel : ViewModel() {
     private val _recommendation = MutableStateFlow<RecommendationResponse?>(null)
     val recommendation = _recommendation.asStateFlow()
 
-    private val _labTest = MutableStateFlow<List<LabTestResponse>?>(null)
+    private val _labTest = MutableStateFlow<List<LabTestResponse>?>(emptyList())
     val labTest = _labTest.asStateFlow()
 
     fun signUp(email: String, password: String, context: Context) {
@@ -281,11 +281,12 @@ class DataViewModel : ViewModel() {
 //    }
     fun getRecommendation() {
         DataRepository.fetchRecommendation { result ->
-            if (result != null) {
+            if (result != null && result.isNotEmpty()) {
                 Log.d("Recommendation", "Success: $result")
                 _recommendation.value = result
             } else {
                 Log.e("Recommendation", "Error getting recommendation")
+                _recommendation.value = null
             }
         }
     }
@@ -313,11 +314,12 @@ class DataViewModel : ViewModel() {
 //    }
     fun getLabTest() {
         DataRepository.fetchLabTest { result ->
-            if (result != null) {
+            if (result != null && result.isNotEmpty()) {
                 Log.d("LabTest", "Success: $result")
                 _labTest.value = result
             } else {
                 Log.e("LabTest", "Error getting lab test")
+                _labTest.value = emptyList()
             }
         }
     }

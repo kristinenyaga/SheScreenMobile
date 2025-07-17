@@ -64,11 +64,11 @@ interface DataAPI {
     fun getServicesCost(
     ): Call<ServicesResponse>
 
-    @GET("recommendations/by-patient/53")
+    @GET("recommendations/by-patient/51")
     fun getRecommendation(
     ): Call<RecommendationResponse>
 
-    @GET("/lab-tests/by-patient/53")
+    @GET("/lab-tests/by-patient/51")
     fun getLabTest(
     ): Call<List<LabTestResponse>>
 

@@ -1,6 +1,5 @@
 package com.example.shescreen
 
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,7 +21,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.shescreen.data.api.DataViewModel
 import com.example.shescreen.data.api.PrefsManager
-import com.example.shescreen.data.riskAssessment.PredictionResponse
 import com.example.shescreen.ui.navigation.NavigationGraph
 import com.example.shescreen.ui.theme.SheScreenTheme
 
@@ -40,21 +37,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             SheScreenTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val context = LocalContext.current
-                    val notificationPermission = android.Manifest.permission.POST_NOTIFICATIONS
-
-//                    LaunchedEffect(Unit) {
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                            if (ContextCompat.checkSelfPermission(context, notificationPermission) != PackageManager.PERMISSION_GRANTED) {
-//                                ActivityCompat.requestPermissions(
-//                                    context as Activity,
-//                                    arrayOf(notificationPermission),
-//                                    1001
-//                                )
-//                            }
-//                        }
-//                    }
-
                     val navController = rememberNavController()
                     NavigationGraph(
                         navController = navController,

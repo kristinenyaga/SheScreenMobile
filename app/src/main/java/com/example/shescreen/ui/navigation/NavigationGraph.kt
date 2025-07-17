@@ -17,6 +17,7 @@ import com.example.shescreen.ui.screens.Auth.SignUpScreen
 import com.example.shescreen.ui.screens.Chat.ChatScreen
 import com.example.shescreen.ui.screens.EducationHub.EducationDetailScreen
 import com.example.shescreen.ui.screens.EducationHub.EducationHubScreen
+import com.example.shescreen.ui.screens.HealthSummary.HealthScreen
 import com.example.shescreen.ui.screens.Home.HomeScreen
 import com.example.shescreen.ui.screens.RiskAssessment.PredictionScreen
 import com.example.shescreen.ui.screens.RiskAssessment.RiskAssessmentScreen
@@ -61,6 +62,9 @@ fun NavigationGraph(
         }
         composable(PREDICTION_SCREEN) {
             PredictionScreen(navController, viewModel = dataViewModel)
+        }
+        composable(HEALTH_SCREEN) {
+            HealthScreen(navController)
         }
         composable(CHAT_SCREEN) {
             ChatScreen(navController = navController, prefsManager = prefsManager)
