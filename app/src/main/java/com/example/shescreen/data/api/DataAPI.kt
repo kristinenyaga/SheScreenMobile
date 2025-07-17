@@ -1,5 +1,6 @@
 package com.example.shescreen.data.api
 
+import com.example.shescreen.data.bill.BillResponse
 import com.example.shescreen.data.chat.ChatResponse
 import com.example.shescreen.data.followup.FollowUpResponse
 import com.example.shescreen.data.labtests.LabTestResponse
@@ -14,7 +15,6 @@ import com.example.shescreen.data.signin.SignInResponse
 import com.example.shescreen.data.signup.SignUpRequest
 import com.example.shescreen.data.signup.SignUpResponse
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -76,4 +76,8 @@ interface DataAPI {
     @GET("/patients/patientfollowup/1")
     fun getFollowUp(
     ): Call<FollowUpResponse>
+
+    @GET("billable-items/by-patient/51")
+    fun getBill(
+    ): Call<BillResponse>
 }

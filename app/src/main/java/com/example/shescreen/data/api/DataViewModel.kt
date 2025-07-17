@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.shescreen.data.api.RetrofitInstance.createStkPushService
 import com.example.shescreen.data.api.RetrofitInstance.createTokenService
+import com.example.shescreen.data.bill.BillResponse
 import com.example.shescreen.data.chat.ChatResponse
 import com.example.shescreen.data.daraja.StkPushRequest
 import com.example.shescreen.data.daraja.StkPushResponse
@@ -42,6 +43,9 @@ class DataViewModel : ViewModel() {
 
     private val _botResponse = MutableStateFlow<ChatResponse?>(null)
     val botResponse: StateFlow<ChatResponse?> = _botResponse.asStateFlow()
+
+    private val _bill = MutableStateFlow<BillResponse?>(null)
+    val bill: StateFlow<BillResponse?> = _bill.asStateFlow()
 
     private val _recommendation = MutableStateFlow<RecommendationResponse?>(null)
     val recommendation = _recommendation.asStateFlow()
@@ -248,11 +252,35 @@ class DataViewModel : ViewModel() {
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e("Services", "Failed: ${response.code()}, Error: $errorBody")
+                    _services.value = null
+
                 }
             }
 
             override fun onFailure(call: Call<ServicesResponse>, t: Throwable) {
                 Log.e("Services", "Error: ${t.message}")
+            }
+        })
+    }
+
+    fun getBill() {
+        RetrofitInstance.api.getBill().enqueue(object : Callback<BillResponse> {
+            override fun onResponse(
+                call: Call<BillResponse>,
+                response: Response<BillResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("Billing", "Success: $body")
+                    _bill.value = body
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("Billing", "Failed: ${response.code()}, Error: $errorBody")
+                }
+            }
+
+            override fun onFailure(call: Call<BillResponse>, t: Throwable) {
+                Log.e("Billing", "Error: ${t.message}")
             }
         })
     }
@@ -280,6 +308,7 @@ class DataViewModel : ViewModel() {
             }
         }
     }
+
     fun getFollowUp() {
         DataRepository.fetchFollowUp { result ->
             if (result != null && result.toString().isNotEmpty()) {
@@ -350,7 +379,6 @@ class DataViewModel : ViewModel() {
             }
         })
     }
-
 }
 
 fun getTimestamp(): String {

@@ -10,7 +10,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.shescreen.data.api.DataViewModel
 import com.example.shescreen.data.api.PrefsManager
-import com.example.shescreen.data.riskAssessment.PredictionResponse
 import com.example.shescreen.ui.screens.Auth.BioDataScreen
 import com.example.shescreen.ui.screens.Auth.SignInScreen
 import com.example.shescreen.ui.screens.Auth.SignUpScreen
@@ -21,7 +20,6 @@ import com.example.shescreen.ui.screens.HealthSummary.HealthScreen
 import com.example.shescreen.ui.screens.Home.HomeScreen
 import com.example.shescreen.ui.screens.RiskAssessment.PredictionScreen
 import com.example.shescreen.ui.screens.RiskAssessment.RiskAssessmentScreen
-import com.example.shescreen.ui.screens.Services.MpesaPaymentScreen
 import com.example.shescreen.ui.screens.Services.ServicesScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -71,11 +69,6 @@ fun NavigationGraph(
         }
         composable(SERVICES_SCREEN) {
             ServicesScreen(navController = navController)
-        }
-        composable(MPESA_PAYMENT_SCREEN) {
-            MpesaPaymentScreen(price = 200) { phoneNumber ->
-                dataViewModel.initiateStkPush(phoneNumber, 200)
-            }
         }
         composable("educationDetail/{contentId}") { backStackEntry ->
             val contentId = backStackEntry.arguments?.getString("contentId")?.toIntOrNull()
