@@ -10,6 +10,7 @@ import com.example.shescreen.data.chat.ChatResponse
 import com.example.shescreen.data.daraja.StkPushRequest
 import com.example.shescreen.data.daraja.StkPushResponse
 import com.example.shescreen.data.daraja.TokenResponse
+import com.example.shescreen.data.followup.FollowUpResponse
 import com.example.shescreen.data.labtests.LabTestResponse
 import com.example.shescreen.data.profile.ProfileRequest
 import com.example.shescreen.data.profile.ProfileResponse
@@ -42,16 +43,14 @@ class DataViewModel : ViewModel() {
     private val _botResponse = MutableStateFlow<ChatResponse?>(null)
     val botResponse: StateFlow<ChatResponse?> = _botResponse.asStateFlow()
 
-    //    private val _recommendation = MutableStateFlow<RecommendationResponse?>(null)
-//    val recommendation: StateFlow<RecommendationResponse?> = _recommendation.asStateFlow()
-//
-//    private val _labTest = MutableStateFlow<LabTestResponse?>(null)
-//    val labTest: StateFlow<LabTestResponse?> = _labTest.asStateFlow()
     private val _recommendation = MutableStateFlow<RecommendationResponse?>(null)
     val recommendation = _recommendation.asStateFlow()
 
     private val _labTest = MutableStateFlow<List<LabTestResponse>?>(emptyList())
     val labTest = _labTest.asStateFlow()
+
+    private val _followUp = MutableStateFlow<FollowUpResponse?>(null)
+    val followUp = _followUp.asStateFlow()
 
     fun signUp(email: String, password: String, context: Context) {
         val body = SignUpRequest(
@@ -258,27 +257,6 @@ class DataViewModel : ViewModel() {
         })
     }
 
-    //    fun getRecommendation() {
-//        RetrofitInstance.api.getRecommendation().enqueue(object : Callback<RecommendationResponse> {
-//            override fun onResponse(
-//                call: Call<RecommendationResponse>,
-//                response: Response<RecommendationResponse>
-//            ) {
-//                if (response.isSuccessful) {
-//                    val body = response.body()
-//                    Log.d("Recommendation", "Success: $body")
-//                    _recommendation.value = body
-//                } else {
-//                    val errorBody = response.errorBody()?.string()
-//                    Log.e("Recommendation", "Failed: ${response.code()}, Error: $errorBody")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<RecommendationResponse>, t: Throwable) {
-//                Log.e("Recommendation", "Error: ${t.message}")
-//            }
-//        })
-//    }
     fun getRecommendation() {
         DataRepository.fetchRecommendation { result ->
             if (result != null && result.isNotEmpty()) {
@@ -291,27 +269,6 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    //    fun getLabTest() {
-//        RetrofitInstance.api.getLabTest().enqueue(object : Callback<LabTestResponse> {
-//            override fun onResponse(
-//                call: Call<LabTestResponse>,
-//                response: Response<LabTestResponse>
-//            ) {
-//                if (response.isSuccessful) {
-//                    val body = response.body()
-//                    Log.d("LabTest", "Success: $body")
-//                    _labTest.value = body
-//                } else {
-//                    val errorBody = response.errorBody()?.string()
-//                    Log.e("LabTest", "Failed: ${response.code()}, Error: $errorBody")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<LabTestResponse>, t: Throwable) {
-//                Log.e("LabTest", "Error: ${t.message}")
-//            }
-//        })
-//    }
     fun getLabTest() {
         DataRepository.fetchLabTest { result ->
             if (result != null && result.isNotEmpty()) {
@@ -320,6 +277,17 @@ class DataViewModel : ViewModel() {
             } else {
                 Log.e("LabTest", "Error getting lab test")
                 _labTest.value = emptyList()
+            }
+        }
+    }
+    fun getFollowUp() {
+        DataRepository.fetchFollowUp { result ->
+            if (result != null && result.toString().isNotEmpty()) {
+                Log.d("FollowUp", "Success: $result")
+                _followUp.value = result
+            } else {
+                Log.e("LabTest", "Error getting lab test")
+                _followUp.value = null
             }
         }
     }

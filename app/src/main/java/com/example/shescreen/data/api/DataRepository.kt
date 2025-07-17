@@ -1,6 +1,7 @@
 package com.example.shescreen.data.api
 
 import android.util.Log
+import com.example.shescreen.data.followup.FollowUpResponse
 import com.example.shescreen.data.labtests.LabTestResponse
 import com.example.shescreen.data.recommendation.RecommendationResponse
 import retrofit2.Call
@@ -14,11 +15,10 @@ object DataRepository {
                 call: Call<RecommendationResponse>,
                 response: Response<RecommendationResponse>
             ) {
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     callback(response.body())
                     Log.d("DataRepository", "Recommendation response: ${response.body()}")
-                }
-                else callback(null)
+                } else callback(null)
             }
 
             override fun onFailure(call: Call<RecommendationResponse>, t: Throwable) {
@@ -37,12 +37,30 @@ object DataRepository {
                 if (response.isSuccessful) {
                     callback(response.body())
                     Log.d("DataRepository", "Lab test response: ${response.body()}")
-                }
-                else callback(null)
+                } else callback(null)
             }
 
             override fun onFailure(call: Call<List<LabTestResponse>>, t: Throwable) {
                 Log.e("DataRepository", "Failed to fetch lab test", t)
+                callback(null)
+            }
+        })
+    }
+
+    fun fetchFollowUp(callback: (FollowUpResponse?) -> Unit) {
+        RetrofitInstance.api.getFollowUp().enqueue(object : Callback<FollowUpResponse> {
+            override fun onResponse(
+                call: Call<FollowUpResponse>,
+                response: Response<FollowUpResponse>
+            ) {
+                if (response.isSuccessful) {
+                    callback(response.body())
+                    Log.d("DataRepository", "Follow uo response: ${response.body()}")
+                } else callback(null)
+            }
+
+            override fun onFailure(call: Call<FollowUpResponse>, t: Throwable) {
+                Log.e("DataRepository", "Failed to fetch follow up", t)
                 callback(null)
             }
         })

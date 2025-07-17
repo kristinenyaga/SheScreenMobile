@@ -10,5 +10,6 @@ data class LabTestResponse(
     val recommendation_id: Int,
     val result: Any,
     val service: Service,
-    val status: String
+    val status: String,
+    val follow_up_id: Int,
 )

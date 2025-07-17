@@ -22,6 +22,7 @@ class BackgroundFetchWorker(
 
         checkForNewRecommendations()
         checkForNewLabTests()
+        checkForNewFollowUp()
         return Result.success()
     }
 
@@ -50,6 +51,20 @@ class BackgroundFetchWorker(
                 if (oldJson != newJson) {
                     prefs.edit { putString("last_labtest", newJson) }
                     sendNotification("New Lab Test", "A new lab test is available.")
+                }
+            }
+        }
+    }
+    private fun checkForNewFollowUp() {
+        DataRepository.fetchFollowUp { response ->
+            if (response != null) {
+                val prefs = applicationContext.getSharedPreferences("app_data", Context.MODE_PRIVATE)
+                val oldJson = prefs.getString("last_followup", null)
+                val newJson = response.toString()
+
+                if (oldJson != newJson) {
+                    prefs.edit { putString("last_followup", newJson) }
+                    sendNotification("New Follow Up", "A new follow up is available.")
                 }
             }
         }

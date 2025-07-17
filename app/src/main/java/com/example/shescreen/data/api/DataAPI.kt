@@ -1,6 +1,7 @@
 package com.example.shescreen.data.api
 
 import com.example.shescreen.data.chat.ChatResponse
+import com.example.shescreen.data.followup.FollowUpResponse
 import com.example.shescreen.data.labtests.LabTestResponse
 import com.example.shescreen.data.profile.ProfileRequest
 import com.example.shescreen.data.profile.ProfileResponse
@@ -72,7 +73,7 @@ interface DataAPI {
     fun getLabTest(
     ): Call<List<LabTestResponse>>
 
-//    @GET("/lab-tests/by-patient/53")
-//    fun getFollowUp(
-//    ): Call<List<LabTestResponse>>
+    @GET("/patients/patientfollowup/1")
+    fun getFollowUp(
+    ): Call<FollowUpResponse>
 }
