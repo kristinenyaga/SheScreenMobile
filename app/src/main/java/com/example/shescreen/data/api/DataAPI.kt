@@ -1,8 +1,10 @@
 package com.example.shescreen.data.api
 
 import com.example.shescreen.data.chat.ChatResponse
+import com.example.shescreen.data.labtests.LabTestResponse
 import com.example.shescreen.data.profile.ProfileRequest
 import com.example.shescreen.data.profile.ProfileResponse
+import com.example.shescreen.data.recommendation.RecommendationResponse
 import com.example.shescreen.data.riskAssessment.PredictionResponse
 import com.example.shescreen.data.riskAssessment.RiskAssessRequest
 import com.example.shescreen.data.riskAssessment.RiskAssessResponse
@@ -35,7 +37,7 @@ interface DataAPI {
     ): Call<ProfileResponse>
 
     @FormUrlEncoded
-    @POST("token")
+    @POST("patients/token")
     fun signIn(
         @Field("username") email: String,
         @Field("password") password: String,
@@ -61,4 +63,16 @@ interface DataAPI {
     @GET("service-costs/")
     fun getServicesCost(
     ): Call<ServicesResponse>
+
+    @GET("recommendations/by-patient/53")
+    fun getRecommendation(
+    ): Call<RecommendationResponse>
+
+    @GET("/lab-tests/by-patient/53")
+    fun getLabTest(
+    ): Call<List<LabTestResponse>>
+
+//    @GET("/lab-tests/by-patient/53")
+//    fun getFollowUp(
+//    ): Call<List<LabTestResponse>>
 }

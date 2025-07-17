@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -47,13 +49,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.shescreen.R
+import com.example.shescreen.data.messaging.BackgroundFetchWorker
 import com.example.shescreen.ui.navigation.CHAT_SCREEN
 import com.example.shescreen.ui.navigation.EDUCATION_HUB_SCREEN
 import com.example.shescreen.ui.navigation.RISK_ASSESSMENT_SCREEN
 import com.example.shescreen.ui.navigation.SERVICES_SCREEN
 import com.example.shescreen.ui.screens.EducationHub.CarouselItem
 import com.example.shescreen.ui.theme.SheScreenTheme
+import kotlinx.coroutines.delay
+import java.util.concurrent.TimeUnit
 
 data class CarouselItems(
     val id: Int,
@@ -64,6 +73,38 @@ data class CarouselItems(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier, navController: NavHostController) {
+    val context = LocalContext.current
+
+//    LaunchedEffect(Unit) {
+//        val fetchRequest = PeriodicWorkRequestBuilder<BackgroundFetchWorker>(
+//            15,
+//            TimeUnit.MINUTES
+//        ).build()
+//
+//        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+//            "BackgroundFetch",
+//            ExistingPeriodicWorkPolicy.KEEP,
+//            fetchRequest
+//        )
+//    }
+    //for testing/demo
+    LaunchedEffect(Unit) {
+        fun scheduleOneTimeFetch() {
+            val fetchRequest = OneTimeWorkRequestBuilder<BackgroundFetchWorker>()
+                .setInitialDelay(10, TimeUnit.SECONDS)
+                .build()
+
+            WorkManager.getInstance(context).enqueue(fetchRequest)
+        }
+
+        scheduleOneTimeFetch()
+
+        // Optional: keep rescheduling every 5 seconds manually (not recommended for production)
+        repeat(100) { // simulate 100 fetches
+            delay(10000)
+            scheduleOneTimeFetch()
+        }
+    }
     val items = remember {
         listOf(
             CarouselItems(0, R.drawable.prop, "cupcake"),

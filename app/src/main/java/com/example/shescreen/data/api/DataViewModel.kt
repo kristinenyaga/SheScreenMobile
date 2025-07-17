@@ -10,8 +10,10 @@ import com.example.shescreen.data.chat.ChatResponse
 import com.example.shescreen.data.daraja.StkPushRequest
 import com.example.shescreen.data.daraja.StkPushResponse
 import com.example.shescreen.data.daraja.TokenResponse
+import com.example.shescreen.data.labtests.LabTestResponse
 import com.example.shescreen.data.profile.ProfileRequest
 import com.example.shescreen.data.profile.ProfileResponse
+import com.example.shescreen.data.recommendation.RecommendationResponse
 import com.example.shescreen.data.riskAssessment.PredictionResponse
 import com.example.shescreen.data.riskAssessment.RiskAssessRequest
 import com.example.shescreen.data.riskAssessment.RiskAssessResponse
@@ -39,6 +41,17 @@ class DataViewModel : ViewModel() {
 
     private val _botResponse = MutableStateFlow<ChatResponse?>(null)
     val botResponse: StateFlow<ChatResponse?> = _botResponse.asStateFlow()
+
+    //    private val _recommendation = MutableStateFlow<RecommendationResponse?>(null)
+//    val recommendation: StateFlow<RecommendationResponse?> = _recommendation.asStateFlow()
+//
+//    private val _labTest = MutableStateFlow<LabTestResponse?>(null)
+//    val labTest: StateFlow<LabTestResponse?> = _labTest.asStateFlow()
+    private val _recommendation = MutableStateFlow<RecommendationResponse?>(null)
+    val recommendation = _recommendation.asStateFlow()
+
+    private val _labTest = MutableStateFlow<List<LabTestResponse>?>(null)
+    val labTest = _labTest.asStateFlow()
 
     fun signUp(email: String, password: String, context: Context) {
         val body = SignUpRequest(
@@ -243,6 +256,70 @@ class DataViewModel : ViewModel() {
                 Log.e("Services", "Error: ${t.message}")
             }
         })
+    }
+
+    //    fun getRecommendation() {
+//        RetrofitInstance.api.getRecommendation().enqueue(object : Callback<RecommendationResponse> {
+//            override fun onResponse(
+//                call: Call<RecommendationResponse>,
+//                response: Response<RecommendationResponse>
+//            ) {
+//                if (response.isSuccessful) {
+//                    val body = response.body()
+//                    Log.d("Recommendation", "Success: $body")
+//                    _recommendation.value = body
+//                } else {
+//                    val errorBody = response.errorBody()?.string()
+//                    Log.e("Recommendation", "Failed: ${response.code()}, Error: $errorBody")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<RecommendationResponse>, t: Throwable) {
+//                Log.e("Recommendation", "Error: ${t.message}")
+//            }
+//        })
+//    }
+    fun getRecommendation() {
+        DataRepository.fetchRecommendation { result ->
+            if (result != null) {
+                Log.d("Recommendation", "Success: $result")
+                _recommendation.value = result
+            } else {
+                Log.e("Recommendation", "Error getting recommendation")
+            }
+        }
+    }
+
+    //    fun getLabTest() {
+//        RetrofitInstance.api.getLabTest().enqueue(object : Callback<LabTestResponse> {
+//            override fun onResponse(
+//                call: Call<LabTestResponse>,
+//                response: Response<LabTestResponse>
+//            ) {
+//                if (response.isSuccessful) {
+//                    val body = response.body()
+//                    Log.d("LabTest", "Success: $body")
+//                    _labTest.value = body
+//                } else {
+//                    val errorBody = response.errorBody()?.string()
+//                    Log.e("LabTest", "Failed: ${response.code()}, Error: $errorBody")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<LabTestResponse>, t: Throwable) {
+//                Log.e("LabTest", "Error: ${t.message}")
+//            }
+//        })
+//    }
+    fun getLabTest() {
+        DataRepository.fetchLabTest { result ->
+            if (result != null) {
+                Log.d("LabTest", "Success: $result")
+                _labTest.value = result
+            } else {
+                Log.e("LabTest", "Error getting lab test")
+            }
+        }
     }
 
     fun initiateStkPush(phone: String, amount: Int) {

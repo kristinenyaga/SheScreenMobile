@@ -1,0 +1,50 @@
+package com.example.shescreen.data.api
+
+import android.util.Log
+import com.example.shescreen.data.labtests.LabTestResponse
+import com.example.shescreen.data.recommendation.RecommendationResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+object DataRepository {
+    fun fetchRecommendation(callback: (RecommendationResponse?) -> Unit) {
+        RetrofitInstance.api.getRecommendation().enqueue(object : Callback<RecommendationResponse> {
+            override fun onResponse(
+                call: Call<RecommendationResponse>,
+                response: Response<RecommendationResponse>
+            ) {
+                if (response.isSuccessful){
+                    callback(response.body())
+                    Log.d("DataRepository", "Recommendation response: ${response.body()}")
+                }
+                else callback(null)
+            }
+
+            override fun onFailure(call: Call<RecommendationResponse>, t: Throwable) {
+                Log.e("DataRepository", "Failed to fetch recommendation", t)
+                callback(null)
+            }
+        })
+    }
+
+    fun fetchLabTest(callback: (List<LabTestResponse>?) -> Unit) {
+        RetrofitInstance.api.getLabTest().enqueue(object : Callback<List<LabTestResponse>> {
+            override fun onResponse(
+                call: Call<List<LabTestResponse>>,
+                response: Response<List<LabTestResponse>>
+            ) {
+                if (response.isSuccessful) {
+                    callback(response.body())
+                    Log.d("DataRepository", "Lab test response: ${response.body()}")
+                }
+                else callback(null)
+            }
+
+            override fun onFailure(call: Call<List<LabTestResponse>>, t: Throwable) {
+                Log.e("DataRepository", "Failed to fetch lab test", t)
+                callback(null)
+            }
+        })
+    }
+}

@@ -47,8 +47,8 @@ fun SignInScreen(
     navController: NavHostController,
     viewModel: DataViewModel = viewModel()
 ) {
-    val email = remember { mutableStateOf("vicky@gmail.com") }
-    val password = remember { mutableStateOf("vicky1234") }
+    val email = remember { mutableStateOf("cynthia@example.com") }
+    val password = remember { mutableStateOf("password") }
     val context = LocalContext.current
     Column(
         modifier = Modifier

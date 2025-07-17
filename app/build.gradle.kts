@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.messaging)
     implementation(libs.androidx.material.icons.extended.android)
     // Network Image
     implementation(libs.coil.compose)
@@ -84,4 +85,6 @@ dependencies {
 
     implementation(libs.converter.gson.v300)
     implementation(libs.logging.interceptor)
+
+    implementation("androidx.work:work-runtime-ktx:2.10.2")
 }
