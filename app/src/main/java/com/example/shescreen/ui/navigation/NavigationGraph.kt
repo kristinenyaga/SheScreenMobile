@@ -32,7 +32,7 @@ fun NavigationGraph(
     val dataViewModel: DataViewModel = viewModel()
 
     NavHost(
-        navController = navController, startDestination = HOME_SCREEN
+        navController = navController, startDestination = SIGN_IN_SCREEN
     ) {
         composable(SIGN_UP_SCREEN) {
             SignUpScreen(navController, prefsManager)

@@ -1,5 +1,6 @@
 package com.example.shescreen.ui.screens.Auth
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -327,6 +328,13 @@ fun SignInScreen(
                         },
                         context
                     )
+                    navController.navigate(HOME_SCREEN)
+                    Toast.makeText(
+                        context,
+                        "Sign In Successful",
+                        Toast.LENGTH_LONG
+                    ).show()
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()
