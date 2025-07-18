@@ -31,6 +31,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
@@ -193,7 +194,7 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-//            .background(Color(0xFFF8FFFE))
+            .background(Color(0xFFF8FFFE))
     ) {
         // Enhanced Header with better spacing and styling
         Box(
@@ -235,59 +236,98 @@ fun HomeScreen(
                 )
             }
             // Decorative elements
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .offset(x = 280.dp, y = (-20).dp)
-                    .background(
-                        Color.White.copy(alpha = 0.1f),
-                        shape = RoundedCornerShape(50.dp)
-                    )
-            )
-            Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .offset(x = 320.dp, y = 40.dp)
-                    .background(
-                        Color.White.copy(alpha = 0.05f),
-                        shape = RoundedCornerShape(30.dp)
-                    )
-            )
+//            Box(
+//                modifier = Modifier
+//                    .size(100.dp)
+//                    .offset(x = 280.dp, y = (-20).dp)
+//                    .background(
+//                        Color.White.copy(alpha = 0.1f),
+//                        shape = RoundedCornerShape(50.dp)
+//                    )
+//            )
+//            Box(
+//                modifier = Modifier
+//                    .size(60.dp)
+//                    .offset(x = 320.dp, y = 40.dp)
+//                    .background(
+//                        Color.White.copy(alpha = 0.05f),
+//                        shape = RoundedCornerShape(30.dp)
+//                    )
+//            )
 
             // Enhanced top-right icons with notification badge
+//            Row(
+//                modifier = Modifier
+//                    .align(Alignment.CenterEnd)
+//                    .padding(16.dp),
+//                horizontalArrangement = Arrangement.spacedBy(12.dp)
+//            ) {
+//                Box {
+//                    Icon(
+//                        imageVector = Icons.Default.Notifications,
+//                        contentDescription = "Notifications",
+//                        tint = Color.White,
+//                        modifier = Modifier
+//                            .size(28.dp)
+//                            .clickable { /* Handle notification click */ }
+//                    )
+//                    // Notification badge
+//                    Box(
+//                        modifier = Modifier
+//                            .size(8.dp)
+//                            .clip(CircleShape)
+//                            .background(Color.Red)
+//                            .align(Alignment.TopEnd)
+//                    )
+//                }
+//
+//                Icon(
+//                    imageVector = Icons.Default.AccountCircle,
+//                    contentDescription = "Profile",
+//                    tint = Color.White,
+//                    modifier = Modifier
+//                        .size(32.dp)
+//                        .clickable { /* Handle profile click */ }
+//                )
+//            }
             Row(
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .padding(16.dp),
+                    .padding(20.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Box {
+                IconButton(
+                    onClick = { /* Handle profile click */ },
+                    modifier = Modifier
+                        .size(40.dp)
+                        .background(
+                            Color.White.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                ) {
                     Icon(
-                        imageVector = Icons.Default.Notifications,
-                        contentDescription = "Notifications",
+                        Icons.Default.AccountCircle,
+                        "Profile",
                         tint = Color.White,
-                        modifier = Modifier
-                            .size(28.dp)
-                            .clickable { /* Handle notification click */ }
-                    )
-                    // Notification badge
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .clip(CircleShape)
-                            .background(Color.Red)
-                            .align(Alignment.TopEnd)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
-
-                Icon(
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = "Profile",
-                    tint = Color.White,
+                IconButton(
+                    onClick = { /* Handle notifications click */ },
                     modifier = Modifier
-                        .size(32.dp)
-                        .clickable { /* Handle profile click */ }
-                )
+                        .size(40.dp)
+                        .background(
+                            Color.White.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                ) {
+                    Icon(
+                        Icons.Default.Notifications,
+                        "Notifications",
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
 

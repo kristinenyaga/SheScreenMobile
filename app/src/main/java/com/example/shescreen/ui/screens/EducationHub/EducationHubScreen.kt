@@ -93,7 +93,7 @@ fun EducationHubScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-//            .background(Color(0xFFF8FFFE))
+            .background(Color(0xFFF8FFFE))
     ) {
         // Enhanced Header
         Box(

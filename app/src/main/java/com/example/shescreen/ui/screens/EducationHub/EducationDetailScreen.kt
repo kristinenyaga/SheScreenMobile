@@ -43,14 +43,14 @@ fun EducationDetailScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-//            .background(
-//                brush = Brush.verticalGradient(
-//                    colors = listOf(
-//                        Color(0xFFF8FFFE),
-//                        Color(0xFFE8F6F8)
-//                    )
-//                )
-//            )
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFFF8FFFE),
+                        Color(0xFFE8F6F8)
+                    )
+                )
+            )
     ) {
         // 🔹 Enhanced Header with Back Button
         Box(
