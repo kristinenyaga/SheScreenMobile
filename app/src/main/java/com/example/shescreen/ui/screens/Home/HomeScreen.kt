@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -233,6 +234,25 @@ fun HomeScreen(
                     )
                 )
             }
+            // Decorative elements
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .offset(x = 280.dp, y = (-20).dp)
+                    .background(
+                        Color.White.copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(50.dp)
+                    )
+            )
+            Box(
+                modifier = Modifier
+                    .size(60.dp)
+                    .offset(x = 320.dp, y = 40.dp)
+                    .background(
+                        Color.White.copy(alpha = 0.05f),
+                        shape = RoundedCornerShape(30.dp)
+                    )
+            )
 
             // Enhanced top-right icons with notification badge
             Row(
