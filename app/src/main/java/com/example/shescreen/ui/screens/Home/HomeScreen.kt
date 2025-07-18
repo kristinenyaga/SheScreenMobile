@@ -126,14 +126,14 @@ fun HomeScreen(
         listOf(
             CarouselItems(
                 0,
-                R.drawable.prop,
+                R.drawable.cancer,
                 "Cervical Health Screening",
                 "Stay Protected",
                 "Regular screening saves lives"
             ),
             CarouselItems(
                 1,
-                R.drawable.prop,
+                R.drawable.prev,
                 "Prevention Tips",
                 "Prevention First",
                 "Simple steps for better health"
@@ -147,14 +147,14 @@ fun HomeScreen(
             ),
             CarouselItems(
                 3,
-                R.drawable.prop,
+                R.drawable.alone,
                 "Support Community",
                 "You're Not Alone",
                 "Connect with others"
             ),
             CarouselItems(
                 4,
-                R.drawable.prop,
+                R.drawable.pref,
                 "Expert Care",
                 "Professional Support",
                 "Access quality healthcare"
