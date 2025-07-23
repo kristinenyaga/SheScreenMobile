@@ -3,6 +3,7 @@ package com.example.shescreen.data.api
 import com.example.shescreen.data.bill.BillResponse
 import com.example.shescreen.data.chat.ChatResponse
 import com.example.shescreen.data.followup.FollowUpResponse
+import com.example.shescreen.data.getprofile.GetProfileResponse
 import com.example.shescreen.data.labtests.LabTestResponse
 import com.example.shescreen.data.profile.ProfileRequest
 import com.example.shescreen.data.profile.ProfileResponse
@@ -55,7 +56,7 @@ interface DataAPI {
         @Header("Authorization") token: String,
     ): Call<PredictionResponse>
 
-    @GET("conversation")
+    @GET("patients/conversation")
     fun chatBot(
         @Header("Authorization") token: String,
         @Query("query") query: String,
@@ -65,19 +66,28 @@ interface DataAPI {
     fun getServicesCost(
     ): Call<ServicesResponse>
 
-    @GET("recommendations/by-patient/51")
+    @GET("recommendations/by-patient/")
     fun getRecommendation(
-    ): Call<RecommendationResponse>
+        @Header("Authorization") token: String,
+        ): Call<RecommendationResponse>
 
-    @GET("/lab-tests/by-patient/51")
+    @GET("/lab-tests/by-patient/")
     fun getLabTest(
-    ): Call<List<LabTestResponse>>
+        @Header("Authorization") token: String,
+        ): Call<List<LabTestResponse>>
 
-    @GET("/patients/patientfollowup/1")
+    @GET("/patients/patientfollowup/")
     fun getFollowUp(
-    ): Call<FollowUpResponse>
+        @Header("Authorization") token: String,
+        ): Call<FollowUpResponse>
 
-    @GET("billable-items/by-patient/51")
+    @GET("billable-items/by-patient/")
     fun getBill(
-    ): Call<BillResponse>
+        @Header("Authorization") token: String,
+        ): Call<BillResponse>
+
+    @GET("patients/me")
+    fun getProfile(
+        @Header("Authorization") token: String,
+        ): Call<GetProfileResponse>
 }

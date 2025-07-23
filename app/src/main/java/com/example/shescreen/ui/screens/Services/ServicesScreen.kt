@@ -57,7 +57,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import com.example.shescreen.data.api.PrefsManager
 import com.example.shescreen.data.bill.BillItem
+import com.example.shescreen.ui.navigation.PROFILE_SCREEN
 
 @Composable
 fun ServicesScreen(
@@ -134,7 +136,7 @@ fun ServicesScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 IconButton(
-                    onClick = { /* Handle profile click */ },
+                    onClick = { /* Handle profile click */ navController.navigate(PROFILE_SCREEN)},
                     modifier = Modifier
                         .size(40.dp)
                         .background(
@@ -149,22 +151,22 @@ fun ServicesScreen(
                         modifier = Modifier.size(24.dp)
                     )
                 }
-                IconButton(
-                    onClick = { /* Handle notifications click */ },
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(
-                            Color.White.copy(alpha = 0.15f),
-                            shape = RoundedCornerShape(20.dp)
-                        )
-                ) {
-                    Icon(
-                        Icons.Default.Notifications,
-                        "Notifications",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+//                IconButton(
+//                    onClick = { /* Handle notifications click */ },
+//                    modifier = Modifier
+//                        .size(40.dp)
+//                        .background(
+//                            Color.White.copy(alpha = 0.15f),
+//                            shape = RoundedCornerShape(20.dp)
+//                        )
+//                ) {
+//                    Icon(
+//                        Icons.Default.Notifications,
+//                        "Notifications",
+//                        tint = Color.White,
+//                        modifier = Modifier.size(24.dp)
+//                    )
+//                }
             }
 
             // Decorative elements
@@ -455,9 +457,13 @@ fun ServiceCard(serviceItem: ServicesResponseItem) {
 fun PaymentsTab(viewModel: DataViewModel) {
     val bill by viewModel.bill.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val token = PrefsManager(context).getAuthToken("token")
 
     LaunchedEffect(Unit) {
-        viewModel.getBill()
+        viewModel.getBill(
+            token = "Bearer $token"
+        )
     }
 
     Column(

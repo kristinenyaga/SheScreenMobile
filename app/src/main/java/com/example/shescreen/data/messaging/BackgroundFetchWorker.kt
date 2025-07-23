@@ -11,11 +11,14 @@ import androidx.work.WorkerParameters
 import com.example.shescreen.R
 import com.example.shescreen.data.api.DataRepository
 import androidx.core.content.edit
+import com.example.shescreen.data.api.PrefsManager
 
 class BackgroundFetchWorker(
     context: Context,
     params: WorkerParameters
 ) : Worker(context, params) {
+
+    val token = PrefsManager(context).getAuthToken("token")
 
     override fun doWork(): Result {
         Log.d("WorkManager", "✅ Worker triggered at ${System.currentTimeMillis()}")
@@ -27,7 +30,8 @@ class BackgroundFetchWorker(
     }
 
     private fun checkForNewRecommendations() {
-        DataRepository.fetchRecommendation { response ->
+
+        DataRepository.fetchRecommendation( "Bearer $token") { response ->
             if (response != null) {
                 val prefs = applicationContext.getSharedPreferences("app_data", Context.MODE_PRIVATE)
                 val oldJson = prefs.getString("last_recommendation", null)
@@ -42,7 +46,7 @@ class BackgroundFetchWorker(
     }
 
     private fun checkForNewLabTests() {
-        DataRepository.fetchLabTest { response ->
+        DataRepository.fetchLabTest("Bearer $token") { response ->
             if (response != null) {
                 val prefs = applicationContext.getSharedPreferences("app_data", Context.MODE_PRIVATE)
                 val oldJson = prefs.getString("last_labtest", null)
@@ -56,7 +60,7 @@ class BackgroundFetchWorker(
         }
     }
     private fun checkForNewFollowUp() {
-        DataRepository.fetchFollowUp { response ->
+        DataRepository.fetchFollowUp("Bearer $token") { response ->
             if (response != null) {
                 val prefs = applicationContext.getSharedPreferences("app_data", Context.MODE_PRIVATE)
                 val oldJson = prefs.getString("last_followup", null)

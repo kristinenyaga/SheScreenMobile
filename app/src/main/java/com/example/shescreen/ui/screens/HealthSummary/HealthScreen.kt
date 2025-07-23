@@ -49,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -57,6 +58,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.shescreen.data.api.DataViewModel
+import com.example.shescreen.data.api.PrefsManager
+import com.example.shescreen.ui.navigation.PROFILE_SCREEN
 import java.time.ZonedDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -68,11 +71,19 @@ fun HealthScreen(
     val recommendations by viewModel.recommendation.collectAsState()
     val labTests by viewModel.labTest.collectAsState()
     val followUp by viewModel.followUp.collectAsState()
+    val context = LocalContext.current
+    val token = PrefsManager(context).getAuthToken("token")
 
     LaunchedEffect(Unit) {
-        viewModel.getRecommendation()
-        viewModel.getLabTest()
-        viewModel.getFollowUp()
+        viewModel.getRecommendation(
+            token = "Bearer $token"
+        )
+        viewModel.getLabTest(
+            token = "Bearer $token"
+        )
+        viewModel.getFollowUp(
+            token = "Bearer $token"
+        )
     }
 
     val sortedRecs = recommendations?.sortedByDescending {
@@ -170,7 +181,7 @@ fun HealthScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 IconButton(
-                    onClick = { /* Handle profile click */ },
+                    onClick = { /* Handle profile click */navController.navigate(PROFILE_SCREEN) },
                     modifier = Modifier
                         .size(40.dp)
                         .background(
@@ -185,22 +196,22 @@ fun HealthScreen(
                         modifier = Modifier.size(24.dp)
                     )
                 }
-                IconButton(
-                    onClick = { /* Handle notifications click */ },
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(
-                            Color.White.copy(alpha = 0.15f),
-                            shape = RoundedCornerShape(20.dp)
-                        )
-                ) {
-                    Icon(
-                        Icons.Default.Notifications,
-                        "Notifications",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+//                IconButton(
+//                    onClick = { /* Handle notifications click */ },
+//                    modifier = Modifier
+//                        .size(40.dp)
+//                        .background(
+//                            Color.White.copy(alpha = 0.15f),
+//                            shape = RoundedCornerShape(20.dp)
+//                        )
+//                ) {
+//                    Icon(
+//                        Icons.Default.Notifications,
+//                        "Notifications",
+//                        tint = Color.White,
+//                        modifier = Modifier.size(24.dp)
+//                    )
+//                }
             }
         }
 

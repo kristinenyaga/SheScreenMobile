@@ -295,16 +295,16 @@ fun SignInScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Forgot password
-            TextButton(
-                onClick = { /* Handle forgot password */ },
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Text(
-                    text = "Forgot Password?",
-                    color = primaryColor,
-                    fontWeight = FontWeight.Medium
-                )
-            }
+//            TextButton(
+//                onClick = { /* Handle forgot password */ },
+//                modifier = Modifier.align(Alignment.End)
+//            ) {
+//                Text(
+//                    text = "Forgot Password?",
+//                    color = primaryColor,
+//                    fontWeight = FontWeight.Medium
+//                )
+//            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -325,15 +325,16 @@ fun SignInScreen(
                         onSuccess = {
                             isLoading = false
                             navController.navigate(HOME_SCREEN)
+                            Toast.makeText(
+                                context,
+                                "Sign In Successful",
+                                Toast.LENGTH_LONG
+                            ).show()
                         },
                         context
                     )
-                    navController.navigate(HOME_SCREEN)
-                    Toast.makeText(
-                        context,
-                        "Sign In Successful",
-                        Toast.LENGTH_LONG
-                    ).show()
+//                    navController.navigate(HOME_SCREEN)
+
 
                 },
                 modifier = Modifier

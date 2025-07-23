@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import com.example.shescreen.data.api.DataViewModel
 import com.example.shescreen.data.api.PrefsManager
 import com.example.shescreen.ui.screens.Auth.BioDataScreen
+import com.example.shescreen.ui.screens.Auth.ProfileScreen
 import com.example.shescreen.ui.screens.Auth.SignInScreen
 import com.example.shescreen.ui.screens.Auth.SignUpScreen
 import com.example.shescreen.ui.screens.Chat.ChatScreen
@@ -41,6 +42,7 @@ fun NavigationGraph(
             SignInScreen(navController)
         }
         composable(PROFILE_SCREEN) {
+            ProfileScreen(navController)
         }
         composable(EDUCATION_HUB_SCREEN) {
             EducationHubScreen(navController = navController)

@@ -71,6 +71,7 @@ import com.example.shescreen.data.messaging.BackgroundFetchWorker
 import com.example.shescreen.ui.navigation.CHAT_SCREEN
 import com.example.shescreen.ui.navigation.EDUCATION_HUB_SCREEN
 import com.example.shescreen.ui.navigation.HEALTH_SCREEN
+import com.example.shescreen.ui.navigation.PROFILE_SCREEN
 import com.example.shescreen.ui.navigation.RISK_ASSESSMENT_SCREEN
 import com.example.shescreen.ui.navigation.SERVICES_SCREEN
 import com.example.shescreen.ui.screens.EducationHub.CarouselItem
@@ -126,7 +127,7 @@ fun HomeScreen(
         listOf(
             CarouselItems(
                 0,
-                R.drawable.cancer,
+                R.drawable.cancer ,
                 "Cervical Health Screening",
                 "Stay Protected",
                 "Regular screening saves lives"
@@ -297,7 +298,8 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 IconButton(
-                    onClick = { /* Handle profile click */ },
+                    onClick = { /* Handle profile click */
+                    navController.navigate(PROFILE_SCREEN)},
                     modifier = Modifier
                         .size(40.dp)
                         .background(
@@ -312,22 +314,22 @@ fun HomeScreen(
                         modifier = Modifier.size(24.dp)
                     )
                 }
-                IconButton(
-                    onClick = { /* Handle notifications click */ },
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(
-                            Color.White.copy(alpha = 0.15f),
-                            shape = RoundedCornerShape(20.dp)
-                        )
-                ) {
-                    Icon(
-                        Icons.Default.Notifications,
-                        "Notifications",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+//                IconButton(
+//                    onClick = { /* Handle notifications click */ },
+//                    modifier = Modifier
+//                        .size(40.dp)
+//                        .background(
+//                            Color.White.copy(alpha = 0.15f),
+//                            shape = RoundedCornerShape(20.dp)
+//                        )
+//                ) {
+//                    Icon(
+//                        Icons.Default.Notifications,
+//                        "Notifications",
+//                        tint = Color.White,
+//                        modifier = Modifier.size(24.dp)
+//                    )
+//                }
             }
         }
 

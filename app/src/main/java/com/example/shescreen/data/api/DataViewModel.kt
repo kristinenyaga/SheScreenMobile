@@ -12,6 +12,7 @@ import com.example.shescreen.data.daraja.StkPushRequest
 import com.example.shescreen.data.daraja.StkPushResponse
 import com.example.shescreen.data.daraja.TokenResponse
 import com.example.shescreen.data.followup.FollowUpResponse
+import com.example.shescreen.data.getprofile.GetProfileResponse
 import com.example.shescreen.data.labtests.LabTestResponse
 import com.example.shescreen.data.profile.ProfileRequest
 import com.example.shescreen.data.profile.ProfileResponse
@@ -43,6 +44,8 @@ class DataViewModel : ViewModel() {
 
     private val _botResponse = MutableStateFlow<ChatResponse?>(null)
     val botResponse: StateFlow<ChatResponse?> = _botResponse.asStateFlow()
+    private val _profile = MutableStateFlow<GetProfileResponse?>(null)
+    val profile: StateFlow<GetProfileResponse?> = _profile.asStateFlow()
 
     private val _bill = MutableStateFlow<BillResponse?>(null)
     val bill: StateFlow<BillResponse?> = _bill.asStateFlow()
@@ -228,13 +231,38 @@ class DataViewModel : ViewModel() {
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e("Chat", "Failed: ${response.code()}, Error: $errorBody")
-                    _prediction.value = null
+                    _botResponse.value = null
                 }
             }
 
             override fun onFailure(call: Call<ChatResponse>, t: Throwable) {
                 Log.e("Chat", "Error: ${t.message}")
-                _prediction.value = null
+                _botResponse.value = null
+            }
+        })
+    }
+    fun getProfile(token: String) {
+        RetrofitInstance.api.getProfile(
+            token = token
+        ).enqueue(object : Callback<GetProfileResponse> {
+            override fun onResponse(
+                call: Call<GetProfileResponse>,
+                response: Response<GetProfileResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("Chat", "Success: $body")
+                    _profile.value = body
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("Chat", "Failed: ${response.code()}, Error: $errorBody")
+                    _profile.value = null
+                }
+            }
+
+            override fun onFailure(call: Call<GetProfileResponse>, t: Throwable) {
+                Log.e("Chat", "Error: ${t.message}")
+                _profile.value = null
             }
         })
     }
@@ -263,8 +291,10 @@ class DataViewModel : ViewModel() {
         })
     }
 
-    fun getBill() {
-        RetrofitInstance.api.getBill().enqueue(object : Callback<BillResponse> {
+    fun getBill(token: String) {
+        RetrofitInstance.api.getBill(
+            token = token
+        ).enqueue(object : Callback<BillResponse> {
             override fun onResponse(
                 call: Call<BillResponse>,
                 response: Response<BillResponse>
@@ -285,8 +315,8 @@ class DataViewModel : ViewModel() {
         })
     }
 
-    fun getRecommendation() {
-        DataRepository.fetchRecommendation { result ->
+    fun getRecommendation(token: String) {
+        DataRepository.fetchRecommendation(token) { result ->
             if (result != null && result.isNotEmpty()) {
                 Log.d("Recommendation", "Success: $result")
                 _recommendation.value = result
@@ -297,8 +327,8 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun getLabTest() {
-        DataRepository.fetchLabTest { result ->
+    fun getLabTest(token: String) {
+        DataRepository.fetchLabTest(token) { result ->
             if (result != null && result.isNotEmpty()) {
                 Log.d("LabTest", "Success: $result")
                 _labTest.value = result
@@ -309,8 +339,8 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun getFollowUp() {
-        DataRepository.fetchFollowUp { result ->
+    fun getFollowUp(token: String) {
+        DataRepository.fetchFollowUp(token) { result ->
             if (result != null && result.toString().isNotEmpty()) {
                 Log.d("FollowUp", "Success: $result")
                 _followUp.value = result

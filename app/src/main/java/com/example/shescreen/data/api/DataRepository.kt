@@ -9,8 +9,10 @@ import retrofit2.Callback
 import retrofit2.Response
 
 object DataRepository {
-    fun fetchRecommendation(callback: (RecommendationResponse?) -> Unit) {
-        RetrofitInstance.api.getRecommendation().enqueue(object : Callback<RecommendationResponse> {
+    fun fetchRecommendation(token: String, callback: (RecommendationResponse?) -> Unit) {
+        RetrofitInstance.api.getRecommendation(
+            token = token
+        ).enqueue(object : Callback<RecommendationResponse> {
             override fun onResponse(
                 call: Call<RecommendationResponse>,
                 response: Response<RecommendationResponse>
@@ -28,8 +30,10 @@ object DataRepository {
         })
     }
 
-    fun fetchLabTest(callback: (List<LabTestResponse>?) -> Unit) {
-        RetrofitInstance.api.getLabTest().enqueue(object : Callback<List<LabTestResponse>> {
+    fun fetchLabTest(token: String, callback: (List<LabTestResponse>?) -> Unit) {
+        RetrofitInstance.api.getLabTest(
+            token = token
+        ).enqueue(object : Callback<List<LabTestResponse>> {
             override fun onResponse(
                 call: Call<List<LabTestResponse>>,
                 response: Response<List<LabTestResponse>>
@@ -47,8 +51,10 @@ object DataRepository {
         })
     }
 
-    fun fetchFollowUp(callback: (FollowUpResponse?) -> Unit) {
-        RetrofitInstance.api.getFollowUp().enqueue(object : Callback<FollowUpResponse> {
+    fun fetchFollowUp(token: String, callback: (FollowUpResponse?) -> Unit) {
+        RetrofitInstance.api.getFollowUp(
+            token = token
+        ).enqueue(object : Callback<FollowUpResponse> {
             override fun onResponse(
                 call: Call<FollowUpResponse>,
                 response: Response<FollowUpResponse>
