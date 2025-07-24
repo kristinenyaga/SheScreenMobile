@@ -51,9 +51,9 @@ object DataRepository {
         })
     }
 
-    fun fetchFollowUp(patientId: Int, callback: (FollowUpResponse?) -> Unit) {
+    fun fetchFollowUp(followUpId: Int, callback: (FollowUpResponse?) -> Unit) {
         RetrofitInstance.api.getFollowUp(
-            patientId
+            followUpId
         ).enqueue(object : Callback<FollowUpResponse> {
             override fun onResponse(
                 call: Call<FollowUpResponse>,

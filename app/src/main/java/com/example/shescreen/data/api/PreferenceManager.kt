@@ -35,12 +35,22 @@ class PrefsManager(context: Context) {
             apply()
         }
     }
+    fun saveFollowUpId(
+        followUpId: String,
+    ) {
+        prefs.edit().apply {
+            putString("followUpId", followUpId)
+            apply()
+        }
+    }
 
     fun getUserDetail(key: String): String? = prefs.getString(key, null)
 
     fun getAuthToken(key: String): String? = prefs.getString(key, null)
 
     fun getPatientId(key: String): String? = prefs.getString(key, null)
+
+    fun getFollowId(key: String): String? = prefs.getString(key, null)
 
     fun clear() {
         prefs.edit() { clear() }

@@ -77,9 +77,9 @@ interface DataAPI {
         @Path("id") patientId: Int
     ): Call<List<LabTestResponse>>
 
-    @GET("/patients/patientfollowup/{id}")
+    @GET("/patients/patientfollowup/{followUpId}")
     fun getFollowUp(
-        @Path("id") patientId: Int
+        @Path("followUpId") followUpId: Int
     ): Call<FollowUpResponse>
 
     @GET("billable-items/by-patient/{id}")

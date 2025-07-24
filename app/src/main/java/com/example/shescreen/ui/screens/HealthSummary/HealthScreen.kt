@@ -88,7 +88,15 @@ fun HealthScreen(
         profile?.let {
             Log.d("HealthScreen", "Profile is now available: ${it.id}")
             viewModel.getRecommendation()
-            viewModel.getLabTest()
+            viewModel.getLabTest(
+                context = context
+            )
+            viewModel.getFollowUp()
+        }
+    }
+    LaunchedEffect(labTests) {
+        labTests?.let {
+            Log.d("HealthScreen", "FollowUp is now available: ${it.firstOrNull()?.follow_up_id}")
             viewModel.getFollowUp()
         }
     }

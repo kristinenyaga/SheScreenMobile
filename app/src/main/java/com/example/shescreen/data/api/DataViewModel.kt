@@ -340,13 +340,14 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    fun getLabTest() {
+    fun getLabTest(context: Context) {
         val patientId = _profile.value?.id
         if (patientId != null) {
             DataRepository.fetchLabTest(patientId) { result ->
                 if (result != null && result.isNotEmpty()) {
                     Log.d("LabTest", "Success: $result")
                     _labTest.value = result
+                    PrefsManager(context).saveFollowUpId(_labTest.value?.firstOrNull()?.follow_up_id.toString())
                 } else {
                     Log.e("LabTest", "Error getting lab test")
                     _labTest.value = emptyList()
@@ -358,21 +359,22 @@ class DataViewModel : ViewModel() {
     }
 
     fun getFollowUp() {
-        val patientId = _profile.value?.id
-        if (patientId != null) {
-            DataRepository.fetchFollowUp(patientId) { result ->
+        val followupId = _labTest.value?.firstOrNull()?.follow_up_id
+        if (followupId != null) {
+            DataRepository.fetchFollowUp(followupId) { result ->
                 if (result != null && result.toString().isNotEmpty()) {
                     Log.d("FollowUp", "Success: $result")
                     _followUp.value = result
                 } else {
-                    Log.e("FollowUp", "Error getting lab test")
+                    Log.e("FollowUp", "Error getting follow-up")
                     _followUp.value = null
                 }
             }
         } else {
-            Log.e("FollowUp", "Patient ID not available")
+            Log.e("FollowUp", "FollowUp ID not available in lab tests")
         }
     }
+
 
     fun initiateStkPush(phone: String, amount: Int) {
         val tokenService = createTokenService()

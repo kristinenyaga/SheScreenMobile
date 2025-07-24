@@ -25,6 +25,8 @@ class BackgroundFetchWorker(
     val token = PrefsManager(context).getAuthToken("token")
     val patientId = PrefsManager(context).getPatientId("id")?.toInt()
 
+    val followUpId = PrefsManager(context).getFollowId("followUpId")?.toInt()
+
     override fun doWork(): Result {
         Log.d("WorkManager", "✅ Worker triggered at ${System.currentTimeMillis()}")
 
@@ -73,12 +75,12 @@ class BackgroundFetchWorker(
         }
     }
     private fun checkForNewFollowUp() {
-        if (patientId == -1) {
+        if (followUpId == -1) {
             Log.e("WorkManager", "❌ Invalid patient ID")
             return
         }
 
-        DataRepository.fetchFollowUp(patientId!!) { response ->
+        DataRepository.fetchFollowUp(followUpId!!) { response ->
             if (response != null) {
                 val prefs = applicationContext.getSharedPreferences("app_data", Context.MODE_PRIVATE)
                 val oldJson = prefs.getString("last_followup", null)
