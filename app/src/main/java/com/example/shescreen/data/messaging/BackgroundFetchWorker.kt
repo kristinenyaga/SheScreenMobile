@@ -5,12 +5,16 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.util.Log
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.shescreen.R
 import com.example.shescreen.data.api.DataRepository
 import androidx.core.content.edit
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.shescreen.data.api.DataViewModel
 import com.example.shescreen.data.api.PrefsManager
 
 class BackgroundFetchWorker(
@@ -19,6 +23,7 @@ class BackgroundFetchWorker(
 ) : Worker(context, params) {
 
     val token = PrefsManager(context).getAuthToken("token")
+    val patientId = PrefsManager(context).getPatientId("id")?.toInt()
 
     override fun doWork(): Result {
         Log.d("WorkManager", "✅ Worker triggered at ${System.currentTimeMillis()}")
@@ -30,8 +35,12 @@ class BackgroundFetchWorker(
     }
 
     private fun checkForNewRecommendations() {
+        if (patientId == -1) {
+            Log.e("WorkManager", "❌ Invalid patient ID")
+            return
+        }
 
-        DataRepository.fetchRecommendation( "Bearer $token") { response ->
+        DataRepository.fetchRecommendation( patientId!!) { response ->
             if (response != null) {
                 val prefs = applicationContext.getSharedPreferences("app_data", Context.MODE_PRIVATE)
                 val oldJson = prefs.getString("last_recommendation", null)
@@ -46,7 +55,11 @@ class BackgroundFetchWorker(
     }
 
     private fun checkForNewLabTests() {
-        DataRepository.fetchLabTest("Bearer $token") { response ->
+        if (patientId == -1) {
+            Log.e("WorkManager", "❌ Invalid patient ID")
+            return
+        }
+        DataRepository.fetchLabTest(patientId!!) { response ->
             if (response != null) {
                 val prefs = applicationContext.getSharedPreferences("app_data", Context.MODE_PRIVATE)
                 val oldJson = prefs.getString("last_labtest", null)
@@ -60,7 +73,12 @@ class BackgroundFetchWorker(
         }
     }
     private fun checkForNewFollowUp() {
-        DataRepository.fetchFollowUp("Bearer $token") { response ->
+        if (patientId == -1) {
+            Log.e("WorkManager", "❌ Invalid patient ID")
+            return
+        }
+
+        DataRepository.fetchFollowUp(patientId!!) { response ->
             if (response != null) {
                 val prefs = applicationContext.getSharedPreferences("app_data", Context.MODE_PRIVATE)
                 val oldJson = prefs.getString("last_followup", null)

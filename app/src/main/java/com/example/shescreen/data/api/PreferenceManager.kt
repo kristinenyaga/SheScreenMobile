@@ -27,10 +27,20 @@ class PrefsManager(context: Context) {
             apply()
         }
     }
+    fun savePatientId(
+        patientId: String,
+    ) {
+        prefs.edit().apply {
+            putString("id", patientId)
+            apply()
+        }
+    }
 
     fun getUserDetail(key: String): String? = prefs.getString(key, null)
 
     fun getAuthToken(key: String): String? = prefs.getString(key, null)
+
+    fun getPatientId(key: String): String? = prefs.getString(key, null)
 
     fun clear() {
         prefs.edit() { clear() }

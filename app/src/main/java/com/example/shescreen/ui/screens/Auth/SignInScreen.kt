@@ -75,8 +75,8 @@ fun SignInScreen(
     navController: NavHostController,
     viewModel: DataViewModel = viewModel()
 ) {
-    val email = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
+    val email = remember { mutableStateOf("esther@gmail.com") }
+    val password = remember { mutableStateOf("XWj2HCRHv3") }
     var passwordVisible by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }

@@ -59,6 +59,7 @@ class DataViewModel : ViewModel() {
     private val _followUp = MutableStateFlow<FollowUpResponse?>(null)
     val followUp = _followUp.asStateFlow()
 
+
     fun signUp(email: String, password: String, context: Context) {
         val body = SignUpRequest(
             email = email,
@@ -241,7 +242,8 @@ class DataViewModel : ViewModel() {
             }
         })
     }
-    fun getProfile(token: String) {
+
+    fun getProfile(token: String, context: Context) {
         RetrofitInstance.api.getProfile(
             token = token
         ).enqueue(object : Callback<GetProfileResponse> {
@@ -253,6 +255,7 @@ class DataViewModel : ViewModel() {
                     val body = response.body()
                     Log.d("Chat", "Success: $body")
                     _profile.value = body
+                    PrefsManager(context).savePatientId(_profile.value?.id.toString())
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e("Chat", "Failed: ${response.code()}, Error: $errorBody")
@@ -291,9 +294,14 @@ class DataViewModel : ViewModel() {
         })
     }
 
-    fun getBill(token: String) {
+    fun getBill() {
+        val patientId = _profile.value?.id
+        if (patientId == null) {
+            Log.e("Billing", "❌ Patient ID is null. Cannot fetch bill.")
+            return
+        }
         RetrofitInstance.api.getBill(
-            token = token
+            patientId
         ).enqueue(object : Callback<BillResponse> {
             override fun onResponse(
                 call: Call<BillResponse>,
@@ -315,39 +323,54 @@ class DataViewModel : ViewModel() {
         })
     }
 
-    fun getRecommendation(token: String) {
-        DataRepository.fetchRecommendation(token) { result ->
-            if (result != null && result.isNotEmpty()) {
-                Log.d("Recommendation", "Success: $result")
-                _recommendation.value = result
-            } else {
-                Log.e("Recommendation", "Error getting recommendation")
-                _recommendation.value = null
+    fun getRecommendation() {
+        val patientId = _profile.value?.id
+        if (patientId != null) {
+            DataRepository.fetchRecommendation(patientId) { result ->
+                if (result != null && result.isNotEmpty()) {
+                    Log.d("Recommendation", "Success: $result")
+                    _recommendation.value = result
+                } else {
+                    Log.e("Recommendation", "Error getting recommendation")
+                    _recommendation.value = null
+                }
             }
+        } else {
+            Log.e("Recommendation", "Patient ID not available")
         }
     }
 
-    fun getLabTest(token: String) {
-        DataRepository.fetchLabTest(token) { result ->
-            if (result != null && result.isNotEmpty()) {
-                Log.d("LabTest", "Success: $result")
-                _labTest.value = result
-            } else {
-                Log.e("LabTest", "Error getting lab test")
-                _labTest.value = emptyList()
+    fun getLabTest() {
+        val patientId = _profile.value?.id
+        if (patientId != null) {
+            DataRepository.fetchLabTest(patientId) { result ->
+                if (result != null && result.isNotEmpty()) {
+                    Log.d("LabTest", "Success: $result")
+                    _labTest.value = result
+                } else {
+                    Log.e("LabTest", "Error getting lab test")
+                    _labTest.value = emptyList()
+                }
             }
+        } else {
+            Log.e("LabTest", "Patient ID not available")
         }
     }
 
-    fun getFollowUp(token: String) {
-        DataRepository.fetchFollowUp(token) { result ->
-            if (result != null && result.toString().isNotEmpty()) {
-                Log.d("FollowUp", "Success: $result")
-                _followUp.value = result
-            } else {
-                Log.e("LabTest", "Error getting lab test")
-                _followUp.value = null
+    fun getFollowUp() {
+        val patientId = _profile.value?.id
+        if (patientId != null) {
+            DataRepository.fetchFollowUp(patientId) { result ->
+                if (result != null && result.toString().isNotEmpty()) {
+                    Log.d("FollowUp", "Success: $result")
+                    _followUp.value = result
+                } else {
+                    Log.e("FollowUp", "Error getting lab test")
+                    _followUp.value = null
+                }
             }
+        } else {
+            Log.e("FollowUp", "Patient ID not available")
         }
     }
 

@@ -23,6 +23,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface DataAPI {
@@ -66,28 +67,28 @@ interface DataAPI {
     fun getServicesCost(
     ): Call<ServicesResponse>
 
-    @GET("recommendations/by-patient/")
+    @GET("recommendations/by-patient/{id}")
     fun getRecommendation(
-        @Header("Authorization") token: String,
-        ): Call<RecommendationResponse>
+        @Path("id") patientId: Int
+    ): Call<RecommendationResponse>
 
-    @GET("/lab-tests/by-patient/")
+    @GET("/lab-tests/by-patient/{id}")
     fun getLabTest(
-        @Header("Authorization") token: String,
-        ): Call<List<LabTestResponse>>
+        @Path("id") patientId: Int
+    ): Call<List<LabTestResponse>>
 
-    @GET("/patients/patientfollowup/")
+    @GET("/patients/patientfollowup/{id}")
     fun getFollowUp(
-        @Header("Authorization") token: String,
-        ): Call<FollowUpResponse>
+        @Path("id") patientId: Int
+    ): Call<FollowUpResponse>
 
-    @GET("billable-items/by-patient/")
+    @GET("billable-items/by-patient/{id}")
     fun getBill(
-        @Header("Authorization") token: String,
-        ): Call<BillResponse>
+        @Path("id") patientId: Int
+    ): Call<BillResponse>
 
     @GET("patients/me")
     fun getProfile(
         @Header("Authorization") token: String,
-        ): Call<GetProfileResponse>
+    ): Call<GetProfileResponse>
 }

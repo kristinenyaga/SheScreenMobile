@@ -1,6 +1,7 @@
 package com.example.shescreen.ui.screens.HealthSummary
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -68,22 +69,28 @@ fun HealthScreen(
     navController: NavHostController,
     viewModel: DataViewModel = viewModel()
 ) {
-    val recommendations by viewModel.recommendation.collectAsState()
-    val labTests by viewModel.labTest.collectAsState()
-    val followUp by viewModel.followUp.collectAsState()
     val context = LocalContext.current
     val token = PrefsManager(context).getAuthToken("token")
 
+    val profile by viewModel.profile.collectAsState()
+    val recommendations by viewModel.recommendation.collectAsState()
+    val labTests by viewModel.labTest.collectAsState()
+    val followUp by viewModel.followUp.collectAsState()
+
+
     LaunchedEffect(Unit) {
-        viewModel.getRecommendation(
-            token = "Bearer $token"
+        viewModel.getProfile(
+            token = "Bearer $token",
+            context = context
         )
-        viewModel.getLabTest(
-            token = "Bearer $token"
-        )
-        viewModel.getFollowUp(
-            token = "Bearer $token"
-        )
+    }
+    LaunchedEffect(profile) {
+        profile?.let {
+            Log.d("HealthScreen", "Profile is now available: ${it.id}")
+            viewModel.getRecommendation()
+            viewModel.getLabTest()
+            viewModel.getFollowUp()
+        }
     }
 
     val sortedRecs = recommendations?.sortedByDescending {
@@ -239,7 +246,8 @@ fun HealthScreen(
                 )
             )
         }
-
+//esther@gmail.com
+//XWj2HCRHv3
         Spacer(modifier = Modifier.height(24.dp))
 
         // Enhanced Body Content
@@ -438,13 +446,14 @@ fun HealthScreen(
                                         Spacer(modifier = Modifier.height(12.dp))
 
                                         associatedLabs.forEach { lab ->
-                                            val emoji = when (lab.result.toString().lowercase()) {
+                                            val emoji = when (lab?.result.toString().lowercase()) {
                                                 "positive" -> "❌"
                                                 "negative" -> "✅"
                                                 "pending" -> "⏳"
                                                 else -> "⚠️"
                                             }
-                                            val (backgroundColor, textColor) = when (lab.result.toString().lowercase()) {
+                                            val (backgroundColor, textColor) = when (lab?.result.toString()
+                                                .lowercase()) {
                                                 "positive" -> Color(0xFFFEE2E2) to Color(0xFFDC2626)
                                                 "negative" -> Color(0xFFD1FAE5) to Color(0xFF059669)
                                                 "pending" -> Color(0xFFF3F4F6) to Color(0xFF6B7280)
@@ -503,8 +512,7 @@ fun HealthScreen(
                                     SectionHeader(title = "Follow-up Plan", icon = "📋")
                                     Spacer(modifier = Modifier.height(12.dp))
 
-                                    if (followUp.toString().isNotEmpty()) {
-                                        Spacer(modifier = Modifier.height(8.dp))
+                                    followUp?.let { follow ->
                                         Card(
                                             modifier = Modifier.fillMaxWidth(),
                                             shape = RoundedCornerShape(12.dp),
@@ -533,7 +541,7 @@ fun HealthScreen(
                                                 Spacer(modifier = Modifier.height(12.dp))
 
                                                 Text(
-                                                    "📝 Final Plan: ${followUp?.final_plan}",
+                                                    "📝 Final Plan: ${follow.final_plan}",
                                                     style = MaterialTheme.typography.bodyMedium.copy(
                                                         color = Color(0xFF1E40AF),
                                                         fontWeight = FontWeight.Medium
@@ -541,32 +549,32 @@ fun HealthScreen(
                                                 )
 
                                                 Spacer(modifier = Modifier.height(6.dp))
-                                                Text("👩 Finalized By: ${followUp?.finalized_by?.first_name} ${followUp?.finalized_by?.last_name}",
-                                                    color = Color(0xFF6B7280))
+                                                Text(
+                                                    "👩 Finalized By: ${follow.finalized_by?.first_name ?: ""} ${follow.finalized_by?.last_name ?: ""}",
+                                                    color = Color(0xFF6B7280)
+                                                )
                                                 Spacer(modifier = Modifier.height(6.dp))
 
-                                                Row(Modifier.fillMaxWidth()) {
-                                                    if (!followUp?.context.isNullOrEmpty()) {
-                                                        Spacer(modifier = Modifier.height(6.dp))
-                                                        Text(
-                                                            "🧠 Context: ",
-                                                            fontWeight = FontWeight.SemiBold,
-                                                            color = Color(0xFF6B7280)
-                                                        )
-
-                                                        val contextText =
-                                                            followUp!!.context.replace("[", "")
-                                                                .replace("]", "")
-                                                                .replace("\"", "")
-                                                        Text(contextText,
-                                                            color = Color(0xFF6B7280))
-                                                    }
+                                                if (!follow.context.isNullOrEmpty()) {
+                                                    Spacer(modifier = Modifier.height(6.dp))
+                                                    Text(
+                                                        "🧠 Context: ",
+                                                        fontWeight = FontWeight.SemiBold,
+                                                        color = Color(0xFF6B7280)
+                                                    )
+                                                    val contextText = follow.context
+                                                        .replace("[", "")
+                                                        .replace("]", "")
+                                                        .replace("\"", "")
+                                                    Text(
+                                                        contextText,
+                                                        color = Color(0xFF6B7280)
+                                                    )
                                                 }
                                             }
                                         }
-                                    } else {
-                                        Text("No follow-up data available.", color = Color.Gray)
-                                    }
+                                    } ?: Text("No follow-up data available.", color = Color.Gray)
+
                                 }
                             }
                         }

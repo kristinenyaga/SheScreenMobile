@@ -9,9 +9,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 object DataRepository {
-    fun fetchRecommendation(token: String, callback: (RecommendationResponse?) -> Unit) {
+    fun fetchRecommendation(patientId: Int, callback: (RecommendationResponse?) -> Unit) {
         RetrofitInstance.api.getRecommendation(
-            token = token
+            patientId
         ).enqueue(object : Callback<RecommendationResponse> {
             override fun onResponse(
                 call: Call<RecommendationResponse>,
@@ -30,9 +30,9 @@ object DataRepository {
         })
     }
 
-    fun fetchLabTest(token: String, callback: (List<LabTestResponse>?) -> Unit) {
+    fun fetchLabTest(patientId: Int, callback: (List<LabTestResponse>?) -> Unit) {
         RetrofitInstance.api.getLabTest(
-            token = token
+            patientId
         ).enqueue(object : Callback<List<LabTestResponse>> {
             override fun onResponse(
                 call: Call<List<LabTestResponse>>,
@@ -51,9 +51,9 @@ object DataRepository {
         })
     }
 
-    fun fetchFollowUp(token: String, callback: (FollowUpResponse?) -> Unit) {
+    fun fetchFollowUp(patientId: Int, callback: (FollowUpResponse?) -> Unit) {
         RetrofitInstance.api.getFollowUp(
-            token = token
+            patientId
         ).enqueue(object : Callback<FollowUpResponse> {
             override fun onResponse(
                 call: Call<FollowUpResponse>,

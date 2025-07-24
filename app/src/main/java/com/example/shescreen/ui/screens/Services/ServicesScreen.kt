@@ -1,5 +1,6 @@
 package com.example.shescreen.ui.screens.Services
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -136,7 +137,7 @@ fun ServicesScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 IconButton(
-                    onClick = { /* Handle profile click */ navController.navigate(PROFILE_SCREEN)},
+                    onClick = { /* Handle profile click */ navController.navigate(PROFILE_SCREEN) },
                     modifier = Modifier
                         .size(40.dp)
                         .background(
@@ -459,11 +460,19 @@ fun PaymentsTab(viewModel: DataViewModel) {
     var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val token = PrefsManager(context).getAuthToken("token")
+    val profile by viewModel.profile.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.getBill(
-            token = "Bearer $token"
+        viewModel.getProfile(
+            token = "Bearer $token",
+            context = context
         )
+    }
+    LaunchedEffect(profile) {
+        profile?.let {
+            Log.d("ServicesScreen", "Profile is now available: ${it.id}")
+            viewModel.getBill()
+        }
     }
 
     Column(

@@ -81,6 +81,7 @@ fun ProfileScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getProfile(
+            context = context,
             token = "Bearer $token"
         )
     }
