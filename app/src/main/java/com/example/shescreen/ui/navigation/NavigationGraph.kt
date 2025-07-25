@@ -22,6 +22,7 @@ import com.example.shescreen.ui.screens.Home.HomeScreen
 import com.example.shescreen.ui.screens.RiskAssessment.PredictionScreen
 import com.example.shescreen.ui.screens.RiskAssessment.RiskAssessmentScreen
 import com.example.shescreen.ui.screens.Services.ServicesScreen
+import com.example.shescreen.ui.screens.Symptoms.SymptomScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -40,6 +41,9 @@ fun NavigationGraph(
         }
         composable(SIGN_IN_SCREEN) {
             SignInScreen(navController)
+        }
+        composable(SYMPTOMS_SCREEN) {
+            SymptomScreen(navController = navController)
         }
         composable(PROFILE_SCREEN) {
             ProfileScreen(navController)

@@ -59,14 +59,14 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     //
-    implementation (libs.androidx.navigation.compose)
-    implementation (libs.accompanist.pager)
-    implementation (libs.accompanist.pager.indicators)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicators)
     implementation(libs.androidx.foundation)
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
-    implementation (libs.androidx.runtime.livedata)
-    implementation (libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.firestore)
@@ -86,5 +86,13 @@ dependencies {
     implementation(libs.converter.gson.v300)
     implementation(libs.logging.interceptor)
 
+    //Work manager
     implementation("androidx.work:work-runtime-ktx:2.10.2")
+
+    // PDF generation
+    implementation("com.itextpdf:itextpdf:5.5.13.4")
+    implementation("com.itextpdf:itext-pdfa:5.5.13.4")
+
+    // For better date formatting
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 }

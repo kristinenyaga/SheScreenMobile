@@ -1,6 +1,7 @@
 package com.example.shescreen.ui.screens.Auth
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +52,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -64,6 +66,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.shescreen.R
 import com.example.shescreen.data.api.DataViewModel
 import com.example.shescreen.data.api.PrefsManager
 import com.example.shescreen.ui.navigation.HOME_SCREEN
@@ -109,23 +112,17 @@ fun SignInScreen(
             // Logo with gradient background
             Box(
                 modifier = Modifier
-                    .size(80.dp)
-                    .clip(RoundedCornerShape(40.dp))
-                    .background(
-                        Brush.linearGradient(
-                            colors = listOf(primaryColor, primaryVariant)
-                        )
-                    ),
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(40.dp)),
+//                    .background(
+//                        Brush.linearGradient(
+//                            colors = listOf(primaryColor, primaryVariant)
+//                        )
+//                    ),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "SS",
-                    style = TextStyle(
-                        color = Color.White,
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                )
+                Image(painter = painterResource(R.drawable.logo), contentDescription = "logo",
+                    modifier = Modifier.size(120.dp))
             }
 
             Spacer(modifier = Modifier.height(16.dp))

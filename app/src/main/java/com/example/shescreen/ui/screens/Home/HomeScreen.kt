@@ -74,6 +74,7 @@ import com.example.shescreen.ui.navigation.HEALTH_SCREEN
 import com.example.shescreen.ui.navigation.PROFILE_SCREEN
 import com.example.shescreen.ui.navigation.RISK_ASSESSMENT_SCREEN
 import com.example.shescreen.ui.navigation.SERVICES_SCREEN
+import com.example.shescreen.ui.navigation.SYMPTOMS_SCREEN
 import com.example.shescreen.ui.screens.EducationHub.CarouselItem
 import com.example.shescreen.ui.theme.SheScreenTheme
 import kotlinx.coroutines.delay
@@ -487,14 +488,28 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            EnhancedCardItem(
-                title = "My Health Summary",
-                description = "View your recent recommendations, lab test results and follow-ups.",
-                icon = "📊",
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                route = HEALTH_SCREEN,
-                navController = navController
-            )
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                EnhancedCardItem(
+                    title = "My Health Summary",
+                    description = "View your recent recommendations, lab test results and follow-ups.",
+                    icon = "📊",
+                    modifier = Modifier.weight(1f),
+                    route = HEALTH_SCREEN,
+                    navController = navController
+                )
+
+                EnhancedCardItem(
+                    title = "Log Symptoms",
+                    description = "Record your symptoms to help monitor your health status.",
+                    icon = "📝",
+                    modifier = Modifier.weight(1f),
+                    route = SYMPTOMS_SCREEN,
+                    navController = navController
+                )
+            }
 
             Spacer(modifier = Modifier.weight(1f))
 

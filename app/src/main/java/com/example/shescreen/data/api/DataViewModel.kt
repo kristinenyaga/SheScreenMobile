@@ -24,6 +24,8 @@ import com.example.shescreen.data.services.ServicesResponse
 import com.example.shescreen.data.signin.SignInResponse
 import com.example.shescreen.data.signup.SignUpRequest
 import com.example.shescreen.data.signup.SignUpResponse
+import com.example.shescreen.data.symptoms.SymptomsRequest
+import com.example.shescreen.data.symptoms.SymptomsResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -185,6 +187,38 @@ class DataViewModel : ViewModel() {
 
             override fun onFailure(call: Call<RiskAssessResponse>, t: Throwable) {
                 Log.e("Risk Assessment", "Error: ${t.message}")
+            }
+        })
+    }
+    fun symptoms(
+        symptom: String,
+        severity: Int,
+        notes: String,
+        token: String,
+    ) {
+        val body = SymptomsRequest(
+            symptom = symptom,
+            severity = severity,
+            notes = notes,
+        )
+        RetrofitInstance.api.symptoms(
+            request = body,
+            token = token
+        ).enqueue(object : Callback<SymptomsResponse> {
+            override fun onResponse(
+                call: Call<SymptomsResponse>,
+                response: Response<SymptomsResponse>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("Symptom", "Success: ${response.body()}")
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("Symptom", "Failed: ${response.code()}, Error: $errorBody")
+                }
+            }
+
+            override fun onFailure(call: Call<SymptomsResponse>, t: Throwable) {
+                Log.e("Symptom", "Error: ${t.message}")
             }
         })
     }

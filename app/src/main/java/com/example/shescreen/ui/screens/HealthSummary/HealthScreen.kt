@@ -2,6 +2,9 @@ package com.example.shescreen.ui.screens.HealthSummary
 
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -9,7 +12,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,18 +22,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,10 +45,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -61,6 +62,9 @@ import androidx.navigation.NavHostController
 import com.example.shescreen.data.api.DataViewModel
 import com.example.shescreen.data.api.PrefsManager
 import com.example.shescreen.ui.navigation.PROFILE_SCREEN
+import com.example.shescreen.utils.pdf.HealthPdfGenerator
+import com.example.shescreen.utils.pdf.HealthPdfGenerator.generatePdf
+import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -76,7 +80,19 @@ fun HealthScreen(
     val recommendations by viewModel.recommendation.collectAsState()
     val labTests by viewModel.labTest.collectAsState()
     val followUp by viewModel.followUp.collectAsState()
+    var isGeneratingPdf by remember { mutableStateOf(false) }
 
+    // Permission launcher
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                generatePdf(context, profile, recommendations =  recommendations ?: emptyList(), labTests, followUp) // <-- This is your custom generation function
+            } else {
+                Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    )
 
     LaunchedEffect(Unit) {
         viewModel.getProfile(
@@ -106,6 +122,9 @@ fun HealthScreen(
     } ?: emptyList()
 
     val groupedLabTests = labTests?.groupBy { it.recommendation_id } ?: emptyMap()
+
+    val coroutineScope = rememberCoroutineScope()
+
 
     Column(
         modifier = Modifier
@@ -150,45 +169,6 @@ fun HealthScreen(
                     )
                 )
             }
-//            Row(
-//                modifier = Modifier
-//                    .align(Alignment.BottomEnd)
-//                    .padding(16.dp),
-//                horizontalArrangement = Arrangement.spacedBy(12.dp)
-//            ) {
-//                Surface(
-//                    shape = CircleShape,
-//                    color = Color.White.copy(alpha = 0.15f),
-//                    modifier = Modifier
-//                        .size(40.dp)
-//                        .clickable { }
-//                ) {
-//                    Icon(
-//                        Icons.Default.AccountCircle,
-//                        contentDescription = "Profile",
-//                        tint = Color.White,
-//                        modifier = Modifier
-//                            .size(24.dp)
-//                            .padding(8.dp)
-//                    )
-//                }
-//                Surface(
-//                    shape = CircleShape,
-//                    color = Color.White.copy(alpha = 0.15f),
-//                    modifier = Modifier
-//                        .size(40.dp)
-//                        .clickable { }
-//                ) {
-//                    Icon(
-//                        Icons.Default.Notifications,
-//                        contentDescription = "Notifications",
-//                        tint = Color.White,
-//                        modifier = Modifier
-//                            .size(24.dp)
-//                            .padding(8.dp)
-//                    )
-//                }
-//            }
             Row(
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
@@ -212,20 +192,46 @@ fun HealthScreen(
                     )
                 }
 //                IconButton(
-//                    onClick = { /* Handle notifications click */ },
+//                    onClick = {
+//                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+//                            permissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                        } else {
+//                            // API 29+ has scoped storage
+//                            coroutineScope.launch {
+//                                isGeneratingPdf = true
+//                                HealthPdfGenerator.generatePdf(
+//                                    context = context,
+//                                    profile = profile,
+//                                    recommendations = sortedRecs,
+//                                    labTests = labTests ?: emptyList(),
+//                                    followUps = followUp
+//                                )
+//                                isGeneratingPdf = false
+//                            }
+//                        }
+//                    },
 //                    modifier = Modifier
 //                        .size(40.dp)
 //                        .background(
-//                            Color.White.copy(alpha = 0.15f),
+//                            if (sortedRecs.isNotEmpty()) Color.White.copy(alpha = 0.15f)
+//                            else Color.White.copy(alpha = 0.05f),
 //                            shape = RoundedCornerShape(20.dp)
 //                        )
 //                ) {
-//                    Icon(
-//                        Icons.Default.Notifications,
-//                        "Notifications",
-//                        tint = Color.White,
-//                        modifier = Modifier.size(24.dp)
-//                    )
+//                    if (isGeneratingPdf) {
+//                        CircularProgressIndicator(
+//                            modifier = Modifier.size(20.dp),
+//                            color = Color.White,
+//                            strokeWidth = 2.dp
+//                        )
+//                    } else {
+//                        Icon(
+//                            Icons.Default.PictureAsPdf,
+//                            "Download PDF",
+//                            tint = Color.White,
+//                            modifier = Modifier.size(24.dp)
+//                        )
+//                    }
 //                }
             }
         }
@@ -524,7 +530,11 @@ fun HealthScreen(
                                         Card(
                                             modifier = Modifier.fillMaxWidth(),
                                             shape = RoundedCornerShape(12.dp),
-                                            colors = CardDefaults.cardColors(containerColor = Color(0xFFEFF6FF)),
+                                            colors = CardDefaults.cardColors(
+                                                containerColor = Color(
+                                                    0xFFEFF6FF
+                                                )
+                                            ),
                                             elevation = CardDefaults.cardElevation(2.dp)
                                         ) {
                                             Column(modifier = Modifier.padding(16.dp)) {

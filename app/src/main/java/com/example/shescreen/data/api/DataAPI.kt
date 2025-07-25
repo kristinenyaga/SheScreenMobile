@@ -15,6 +15,8 @@ import com.example.shescreen.data.services.ServicesResponse
 import com.example.shescreen.data.signin.SignInResponse
 import com.example.shescreen.data.signup.SignUpRequest
 import com.example.shescreen.data.signup.SignUpResponse
+import com.example.shescreen.data.symptoms.SymptomsRequest
+import com.example.shescreen.data.symptoms.SymptomsResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -91,4 +93,10 @@ interface DataAPI {
     fun getProfile(
         @Header("Authorization") token: String,
     ): Call<GetProfileResponse>
+
+    @POST("symptom-logs")
+    fun symptoms(
+        @Header("Authorization") token: String,
+        @Body request: SymptomsRequest
+    ): Call<SymptomsResponse>
 }
