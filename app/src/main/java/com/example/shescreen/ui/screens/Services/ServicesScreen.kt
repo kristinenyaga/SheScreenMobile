@@ -833,7 +833,9 @@ fun MpesaPaymentDialog(
                         shape = RoundedCornerShape(12.dp),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color(0xFF2BAFBF),
-                            focusedLabelColor = Color(0xFF2BAFBF)
+                            focusedLabelColor = Color(0xFF2BAFBF),
+                            focusedTextColor = Color.Black,        // <--- Text color when focused
+                            unfocusedTextColor = Color.DarkGray
                         )
                     )
 
